@@ -30,7 +30,8 @@ const languageEntries = [
   ]},
   { group: "Módulos y expresiones", items: [
     ["conseguir", "Carga un módulo estándar, local o instalado; consulta el registro solo con permiso.", "módulos"],
-    ["exportar", "Escribe un valor a un archivo; con `como modulo`, propone un módulo al registro.", "módulos"],
+    ["exportar", "Escribe un archivo, compila un programa o propone un módulo con `como modulo`.", "módulos"],
+    ["__herramientas__", "Módulo estándar para analizar y compilar código ESP.", "módulos"],
     ["como", "Indica el formato de exportación, por ejemplo `como modulo`.", "módulos"],
     ["y", "Operador lógico AND.", "operador"],
     ["o", "Operador lógico OR.", "operador"],
@@ -99,7 +100,11 @@ const standardModules = [
   { name: "pruebas", aliases: [], description: "Aserciones para programas y suites de pruebas.",
     members: [["afirmar(condición, mensaje?)", "Devuelve verdadero si se cumple; de lo contrario, lanza un error con el mensaje opcional."]] },
   { name: "compilacion", aliases: [], description: "Información del compilador C++ detectado.",
-    members: [["compilador()", "Devuelve la ruta del compilador C++ disponible."]] }
+    members: [["compilador()", "Devuelve la ruta del compilador C++ disponible."]] },
+  { name: "__herramientas__", aliases: [], description: "Herramientas reales del parser y del compilador ESP.",
+    members: [["analizar(codigo, archivo?)", "Comprueba la sintaxis y devuelve valido, sentencias y el diagnóstico con línea y columna."],
+      ["diagnosticar(codigo, archivo?)", "Alias de analizar."],
+      ["compilar(codigo, salida, formato?, optimizacion?)", "Compila código ESP en un ejecutable, C++, LLVM IR o biblioteca nativa; falla con un error explícito si el compilador no puede generar el artefacto."]] }
 ];
 
 const keywordGroups = document.querySelector("#keyword-groups");

@@ -102,7 +102,7 @@ saludar(<span class="code-string">"mundo"</span>)</code></pre>
         <div>
           <p class="eyebrow">Usar módulos</p>
           <h2>Primero local. Luego tú decides.</h2>
-          <p>ESP no instala código remoto silenciosamente: el intérprete debe comprobar los módulos locales y pedir permiso antes de consultar el registro e instalar uno.</p>
+          <p>ESP resuelve primero módulos estándar y locales; puede comprobar una versión exacta y cargar dependencias declaradas. Solo pide permiso antes de consultar el registro e instalar un módulo remoto.</p>
         </div>
       </div>
       <div class="steps">
@@ -111,7 +111,11 @@ saludar(<span class="code-string">"mundo"</span>)</code></pre>
         <article class="step-card"><span>03</span><h3>Instala si existe</h3><p>Solo tras tu confirmación se consulta el registro; si el paquete existe, se descarga a tu carpeta de ESP.</p></article>
       </div>
       <pre class="sample-block"><code>conseguir json
-conseguir mi_modulo</code></pre>
+conseguir mi_modulo "1.2.3"
+
+conseguir __herramientas__
+variable revision = __herramientas__.analizar("mostrar(1)")
+variable salida = __herramientas__.compilar("mostrar(1)", "programa.exe", "exe")</code></pre>
       <p class="notice"><strong>Seguridad:</strong> un módulo ESP contiene código ejecutable. Revisa su documentación y fuente antes de autorizar su instalación.</p>
     </section>
 
@@ -122,7 +126,7 @@ conseguir mi_modulo</code></pre>
         <p>La publicación propone un Pull Request. El módulo solo aparece en el registro después de que una persona revise y apruebe los cambios.</p>
         <ol class="publish-steps">
           <li>Prepara el código fuente del módulo en un archivo <code>.esp</code>.</li>
-          <li>Usa <code>exportar</code> con el formato <code>modulo</code> para proponerlo.</li>
+          <li>Usa <code>exportar</code> con el formato <code>modulo</code> para proponerlo; también puede compilar ejecutables, LLVM IR y bibliotecas en el sistema nativo.</li>
           <li>Revisa el Pull Request y espera a que se integre.</li>
         </ol>
         <p class="notice"><strong>Nota:</strong> la publicación requiere el repositorio del registro configurado y GitHub CLI autenticado. Nunca pongas tokens en el código ESP.</p>
@@ -133,6 +137,7 @@ conseguir mi_modulo</code></pre>
 <span class="code-key">variable</span> fuente = archivos.leer(<span class="code-string">"utilidades.esp"</span>)
 <span class="code-key">exportar</span> utilidades <span class="code-key">como</span> modulo fuente</code></pre>
         <p>El comando crea una propuesta revisable; no publica directamente en la rama principal.</p>
+        <pre><code>exportar "programa.exe" como exe fuente</code></pre>
       </div>
     </section>
 
