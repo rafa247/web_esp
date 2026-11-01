@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101522">
+  <meta name="description" content="Documentación oficial, módulos y registro comunitario del lenguaje ESP.">
+  <title>ESP — Lenguaje y módulos</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="ESP, inicio">
+      <span class="brand-mark">E</span>
+      <span>ESP<span class="brand-dot">.</span></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
+    <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
+      <a href="#lenguaje">Lenguaje</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#registro">Registro</a>
+      <a class="nav-cta" href="#publicar">Publicar un módulo</a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <section id="inicio" class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> ESP 2.0.0 · Referencia del lenguaje</p>
+        <h1>Un lenguaje claro.<br><span>Un ecosistema abierto.</span></h1>
+        <p class="hero-lead">Explora la sintaxis de ESP, consulta la biblioteca estándar y descubre módulos compartidos por la comunidad.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#lenguaje">Explorar el lenguaje <span aria-hidden="true">→</span></a>
+          <a class="button button-quiet" href="#modulos">Ver módulos</a>
+        </div>
+      </div>
+      <div class="hero-code" aria-label="Ejemplo de programa ESP">
+        <div class="code-top"><span></span><span></span><span></span><span class="code-label">hola.esp</span></div>
+        <pre><code><span class="code-muted"># Tu primer programa</span>
+<span class="code-key">funcion</span> saludar(nombre)
+    <span class="code-key">mostrar</span>(<span class="code-string">"Hola, "</span> + nombre)
+<span class="code-key">fin</span>
+
+saludar(<span class="code-string">"mundo"</span>)</code></pre>
+      </div>
+      <div class="hero-orb hero-orb-one"></div>
+      <div class="hero-orb hero-orb-two"></div>
+    </section>
+
+    <section class="quick-facts" aria-label="Características">
+      <div><strong>.esp</strong><span>Extensión de fuente</span></div>
+      <div><strong>Español</strong><span>Sintaxis legible y accesible</span></div>
+      <div><strong>Abierto</strong><span>Módulos de la comunidad</span></div>
+    </section>
+
+    <section id="lenguaje" class="content-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Referencia rápida</p>
+          <h2>Palabras y conceptos</h2>
+          <p>Busca palabras clave, valores incorporados, operadores y funciones globales de ESP.</p>
+        </div>
+        <label class="search-box">
+          <span class="sr-only">Buscar en la referencia del lenguaje</span>
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="language-search" type="search" placeholder="Buscar una palabra…" autocomplete="off">
+          <kbd>⌘ K</kbd>
+        </label>
+      </div>
+      <div id="keyword-groups" class="keyword-groups" aria-live="polite"></div>
+    </section>
+
+    <section id="modulos" class="content-section section-tinted">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Biblioteca estándar</p>
+          <h2>Módulos para empezar</h2>
+          <p>Capacidades que puedes cargar con <code>conseguir</code>. Cada módulo incluye sus miembros públicos y ejemplos.</p>
+        </div>
+        <label class="search-box">
+          <span class="sr-only">Buscar módulos</span>
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="module-search" type="search" placeholder="Buscar un módulo…" autocomplete="off">
+        </label>
+      </div>
+      <div id="standard-modules" class="module-grid" aria-live="polite"></div>
+      <div id="registro" class="registry-heading">
+        <div>
+          <p class="eyebrow">Hechos por la comunidad</p>
+          <h3>Registro de módulos</h3>
+        </div>
+        <span id="registry-status" class="registry-status">Cargando registro…</span>
+      </div>
+      <div id="community-modules" class="module-grid" aria-live="polite"></div>
+      <p id="community-empty" class="empty-state" hidden>Aún no hay módulos comunitarios publicados.</p>
+    </section>
+
+    <section id="conseguir" class="content-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Usar módulos</p>
+          <h2>Primero local. Luego tú decides.</h2>
+          <p>ESP no instala código remoto silenciosamente: el intérprete debe comprobar los módulos locales y pedir permiso antes de consultar el registro e instalar uno.</p>
+        </div>
+      </div>
+      <div class="steps">
+        <article class="step-card"><span>01</span><h3>Busca en local</h3><p><code>conseguir nombre</code> intenta resolver primero módulos estándar, del proyecto y ya instalados.</p></article>
+        <article class="step-card"><span>02</span><h3>Solicita permiso</h3><p>Si no lo encuentra, ESP pregunta si quieres buscar e instalar el módulo comunitario.</p></article>
+        <article class="step-card"><span>03</span><h3>Instala si existe</h3><p>Solo tras tu confirmación se consulta el registro; si el paquete existe, se descarga a tu carpeta de ESP.</p></article>
+      </div>
+      <pre class="sample-block"><code>conseguir json
+conseguir mi_modulo</code></pre>
+      <p class="notice"><strong>Seguridad:</strong> un módulo ESP contiene código ejecutable. Revisa su documentación y fuente antes de autorizar su instalación.</p>
+    </section>
+
+    <section id="publicar" class="content-section section-publish">
+      <div class="publish-copy">
+        <p class="eyebrow">Ecosistema abierto</p>
+        <h2>Comparte lo que construyes.</h2>
+        <p>La publicación propone un Pull Request. El módulo solo aparece en el registro después de que una persona revise y apruebe los cambios.</p>
+        <ol class="publish-steps">
+          <li>Prepara el código fuente del módulo en un archivo <code>.esp</code>.</li>
+          <li>Usa <code>exportar</code> con el formato <code>modulo</code> para proponerlo.</li>
+          <li>Revisa el Pull Request y espera a que se integre.</li>
+        </ol>
+        <p class="notice"><strong>Nota:</strong> la publicación requiere el repositorio del registro configurado y GitHub CLI autenticado. Nunca pongas tokens en el código ESP.</p>
+      </div>
+      <div class="publish-example">
+        <span class="code-label">publicar.esp</span>
+        <pre><code><span class="code-key">conseguir</span> archivos
+<span class="code-key">variable</span> fuente = archivos.leer(<span class="code-string">"utilidades.esp"</span>)
+<span class="code-key">exportar</span> utilidades <span class="code-key">como</span> modulo fuente</code></pre>
+        <p>El comando crea una propuesta revisable; no publica directamente en la rama principal.</p>
+      </div>
+    </section>
+
+    <section class="closing-banner">
+      <div><p class="eyebrow">Empieza hoy</p><h2>Tu siguiente programa empieza con <code>.esp</code>.</h2></div>
+      <a class="button button-primary" href="#lenguaje">Consultar referencia <span aria-hidden="true">→</span></a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand" href="#inicio"><span class="brand-mark">E</span><span>ESP<span class="brand-dot">.</span></span></a>
+    <p>Una comunidad que construye con claridad.</p>
+    <span>ESP 2.0.0 · Sitio estático</span>
+  </footer>
+</body>
+</html>
