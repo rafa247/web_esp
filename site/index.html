@@ -112,6 +112,11 @@ saludar(<span class="code-string">"mundo"</span>)</code></pre>
       </div>
       <pre class="sample-block"><code>conseguir json
 conseguir mi_modulo "1.2.3"
+variable respuesta = mi_modulo.funcion_exportada()
+
+conseguir ip
+variable red_lan = ip.rango("192.168.1.10/24")
+mostrar(red_lan.red, red_lan.broadcast, red_lan.primera, red_lan.ultima)
 
 conseguir __herramientas__
 variable revision = __herramientas__.analizar("mostrar(1)")
@@ -123,22 +128,33 @@ variable salida = __herramientas__.compilar("mostrar(1)", "programa.exe", "exe")
       <div class="publish-copy">
         <p class="eyebrow">Ecosistema abierto</p>
         <h2>Comparte lo que construyes.</h2>
-        <p>La publicación propone un Pull Request. El módulo solo aparece en el registro después de que una persona revise y apruebe los cambios.</p>
+        <p>Envía el módulo desde esta página: no necesitas instalar Git, usar una terminal ni tener una cuenta. Los envíos se publican automáticamente en el catálogo.</p>
         <ol class="publish-steps">
-          <li>Prepara el código fuente del módulo en un archivo <code>.esp</code>.</li>
-          <li>Usa <code>exportar</code> con el formato <code>modulo</code> para proponerlo; también puede compilar ejecutables, LLVM IR y bibliotecas en el sistema nativo.</li>
-          <li>Revisa el Pull Request y espera a que se integre.</li>
+          <li>Escribe el nombre, una descripción y el código ESP público del módulo.</li>
+          <li>Completa la verificación antispam y pulsa <strong>Publicar módulo</strong>.</li>
+          <li>Espera a que termine el despliegue del catálogo y ya podrás instalarlo.</li>
         </ol>
-        <p class="notice"><strong>Nota:</strong> la publicación requiere el repositorio del registro configurado y GitHub CLI autenticado. Nunca pongas tokens en el código ESP.</p>
+        <p class="notice"><strong>Importante:</strong> la publicación es automática y no revisa la sintaxis. El código ESP es ejecutable: no incluyas contraseñas, tokens ni datos privados, y revisa el fuente antes de instalar módulos de otras personas.</p>
       </div>
-      <div class="publish-example">
-        <span class="code-label">publicar.esp</span>
-        <pre><code><span class="code-key">conseguir</span> archivos
-<span class="code-key">variable</span> fuente = archivos.leer(<span class="code-string">"utilidades.esp"</span>)
-<span class="code-key">exportar</span> utilidades <span class="code-key">como</span> modulo fuente</code></pre>
-        <p>El comando crea una propuesta revisable; no publica directamente en la rama principal.</p>
-        <pre><code>exportar "programa.exe" como exe fuente</code></pre>
-      </div>
+      <form id="module-submit-form" class="publish-form">
+        <label for="module-name">Nombre del módulo</label>
+        <input id="module-name" name="name" type="text" required minlength="1" maxlength="64"
+          pattern="[A-Za-z0-9_-]+" autocomplete="off" placeholder="saludar"
+          aria-describedby="module-name-help">
+        <small id="module-name-help">Letras, números, guion y guion bajo.</small>
+        <label for="module-description">Descripción</label>
+        <input id="module-description" name="description" type="text" required minlength="8" maxlength="280"
+          placeholder="Funciones para saludar">
+        <label for="module-source">Código fuente ESP</label>
+        <textarea id="module-source" name="source" required rows="12" maxlength="1048576"
+          spellcheck="false" placeholder="publica funcion saludar()&#10;    mostrar(&quot;saludar&quot;)&#10;fin"></textarea>
+        <small>Máximo 1 MiB. El módulo quedará disponible para cualquier persona.</small>
+        <div id="module-turnstile" class="turnstile-widget" aria-label="Verificación antispam"></div>
+        <button id="module-submit-button" class="button button-primary" type="submit" disabled>Publicar módulo</button>
+        <p id="module-submit-status" class="form-status" role="status" aria-live="polite">
+          El formulario de publicación aún no está configurado.
+        </p>
+      </form>
     </section>
 
     <section class="closing-banner">

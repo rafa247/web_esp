@@ -4,14 +4,14 @@ Sitio estático escrito en HTML, CSS y JavaScript sin dependencias de compilaci�
 
 ## Dependencias
 
-El sitio no usa paquetes npm, frameworks, fuentes externas ni CDN. La web se ejecuta en un navegador moderno con soporte para HTML, CSS, JavaScript y `fetch`.
+El sitio no usa paquetes npm ni frameworks. La web usa APIs nativas del navegador y carga Cloudflare Turnstile solo cuando el formulario de publicación está configurado.
 
 | Componente | Versión | Licencia | Uso |
 |---|---|---|---|
 | Node.js | 18 o posterior; probado con 24.18.0 | MIT ([licencia](https://github.com/nodejs/node/blob/main/LICENSE)) | Generar el índice y los SHA-256 de los módulos con APIs integradas; no instala paquetes. |
 | `curl` | Debe admitir `--proto`, `--proto-redir` y `--max-filesize`; probado con 8.13.0 | MIT ([licencia](https://curl.se/docs/copyright.html)) | Descargar el índice y los módulos por HTTPS desde el intérprete. |
-| Git | 2.x; probado con 2.55.0 | GPL-2.0 ([licencia](https://github.com/git/git/blob/master/COPYING)) | Preparar la rama que propone un módulo. |
-| GitHub CLI (`gh`) | Versión estable actual; no se fija una versión | MIT ([licencia](https://github.com/cli/cli/blob/trunk/LICENSE)) | Crear el Pull Request de un módulo; solo se necesita para publicar. |
+| Cloudflare Workers y Turnstile | Plan gratuito disponible; consulta los límites vigentes | Propietario | Recibir envíos anónimos del formulario web y bloquear spam automatizado. |
+| GitHub CLI (`gh`) | Opcional | MIT ([licencia](https://github.com/cli/cli/blob/trunk/LICENSE)) | Publicar módulos desde un programa ESP con `exportar ... como modulo`; el formulario web no lo requiere. |
 
 El workflow de Pages usa `actions/checkout@v4`, `actions/configure-pages@v5`, `actions/upload-pages-artifact@v3` y `actions/deploy-pages@v4`, todos con licencia MIT. Esas etiquetas fijan la versión mayor de cada acción.
 
@@ -35,7 +35,38 @@ El índice contiene el nombre, la ruta y el SHA-256 de cada módulo. El workflow
 }
 ```
 
-Las versiones admitidas son exactas (`X.Y.Z`); el intérprete instala primero las dependencias, y rechaza ciclos. Los campos de versión y dependencias son opcionales para conservar compatibilidad con los módulos existentes. Un `conseguir nombre "1.2.3"` solicita una versión exacta.
+Las versiones admitidas son exactas (`X.Y.Z`); el intérprete instala primero las dependencias, y rechaza ciclos. Los campos de versión y dependencias son opcionales para conservar compatibilidad con los módulos existentes. Un `conseguir nombre "1.2.3"` solicita una versión exacta. Cada módulo se usa como `nombre_del_modulo.miembro`: por ejemplo, `conseguir mi_modulo` seguido de `mi_modulo.funcion_exportada()`.
+
+El módulo comunitario [`ip.esp`](./modules/ip.esp) implementa utilidades de IPv4 e IPv6 en ESP: validación, conversión y normalización de IPv6, máscaras, subredes CIDR, rangos y clasificación habitual. Sus cálculos son locales: no resuelve DNS ni escanea equipos. Los conversores y cálculos devuelven `nulo` ante entradas no válidas; las validaciones y clasificadores devuelven `falso`.
+
+```esp
+conseguir ip
+variable v4 = ip.rango("192.168.1.10/24")
+variable v6 = ip.rango("2001:db8:abcd:12::1/48")
+mostrar(v4.red, v4.broadcast, v4.primera, v4.ultima)
+mostrar(ip.canonizar_ipv6("2001:0db8:0000:0000:0000:0000:0000:0001"))
+mostrar(v6.red, v6.ultima)
+```
+
+## Publicar módulos desde la web
+
+Cualquier persona puede usar el formulario de la página **Publicar un módulo**: escribe el nombre, la descripción y el fuente ESP, completa Turnstile y pulsa **Publicar módulo**. No necesita Git, GitHub CLI, terminal ni cuenta. Los envíos se añaden directamente al registro y se publican automáticamente cuando termina GitHub Pages; no pasan por revisión. Los módulos contienen código ejecutable: los usuarios deben inspeccionar el fuente antes de instalarlo.
+
+El sitio es estático y no puede guardar envíos por sí solo. Para habilitar el formulario, el mantenedor configura una vez un Cloudflare Worker desde el panel web; no hace falta Git ni instalar herramientas:
+
+1. Crea una cuenta de Cloudflare y un widget de Turnstile para el dominio `rafa247.github.io`.
+2. En **Workers & Pages**, crea un Worker llamado `esp-module-publisher` y publica el contenido de [`worker/module-publisher.mjs`](./worker/module-publisher.mjs).
+3. En **Settings → Variables and Secrets**, configura estas variables:
+   - `REGISTRY_OWNER`: `rafa247`
+   - `REGISTRY_REPO`: `web_esp`
+   - `ALLOWED_ORIGIN`: `https://rafa247.github.io`
+   - `GITHUB_TOKEN` como secreto: un fine-grained personal access token limitado al repositorio `web_esp`, con permiso **Contents: Read and write**.
+   - `TURNSTILE_SECRET` como secreto: la clave secreta del widget de Turnstile.
+4. En [`app.js`](./app.js), asigna `modulePublisherEndpoint` a la URL HTTPS del Worker terminada en `/submit`, y `turnstileSiteKey` a la clave pública del widget. Publica el sitio.
+
+El token de GitHub solo vive como secreto del Worker; nunca lo pongas en JavaScript del sitio. El token requiere permiso de escritura en contenido y la rama principal debe permitir esa escritura directa. El Worker valida el origen, el desafío antispam, el nombre, la descripción y el límite de 1 MiB; evita nombres duplicados y escribe los dos archivos del módulo en una sola actualización de la rama principal. El cambio dispara el workflow de Pages, que regenera el índice. La cuenta y el token del mantenedor son necesarios para configurar el servicio; quienes envían módulos no necesitan cuenta.
+
+El formulario está desactivado hasta configurar la URL del Worker y la clave pública de Turnstile. El módulo comunitario [`ip.esp`](./modules/ip.esp) está incluido en el registro; el módulo nativo antiguo de hostname sigue disponible como `conseguir redes.ip`.
 
 ## Compilación desde ESP
 
@@ -55,8 +86,8 @@ En PowerShell configura el repositorio para la sesión actual así:
 $env:ESP_MODULE_REGISTRY_REPOSITORY = "rafa247/web_esp"
 ```
 
-Para buscar e instalar módulos, `curl` debe estar disponible en `PATH`. La publicación crea un Pull Request y requiere Git, GitHub CLI (`gh`) autenticado y permiso para subir ramas. Inicia sesión con `gh auth login`, configura la autenticación de Git con `gh auth setup-git` y verifica la sesión con `gh auth status`; no guardes tokens en los fuentes.
+Para buscar e instalar módulos, `curl` debe estar disponible en `PATH`. La publicación desde ESP con `exportar ... como modulo` es opcional y requiere GitHub CLI (`gh`) autenticado; no requiere Git. Para publicar sin Git ni cuenta, usa el formulario web.
 
 ## Contribuir módulos
 
-Un Pull Request puede añadir `modules/nombre.esp` y, de forma opcional, `modules/nombre.esp.json` con su versión exacta y dependencias. Tras revisar y fusionar el cambio, el workflow actualiza el índice y publica el módulo junto con el sitio.
+Además del formulario, los mantenedores pueden añadir `modules/nombre.esp` y, de forma opcional, `modules/nombre.esp.json` mediante un Pull Request. El workflow actualiza el índice y publica el módulo junto con el sitio.

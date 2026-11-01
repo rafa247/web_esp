@@ -1,0 +1,2 @@
+conseguir archivos
+exportar ip como modulo archivos.leer("modules/ip.esp"), archivos.leer("modules/ip.esp.json")

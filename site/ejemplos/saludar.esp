@@ -1,0 +1,3 @@
+publica funcion saludar()
+    mostrar("saludar")
+fin

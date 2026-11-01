@@ -31,6 +31,20 @@ const modules = fs.readdirSync(modulesRoot, { withFileTypes: true })
         }
         record.version = metadata.version;
       }
+      if (metadata.description !== undefined) {
+        if (typeof metadata.description !== "string") {
+          throw new Error(`description debe ser texto en ${path.basename(metadataPath)}.`);
+        }
+        record.description = metadata.description;
+      }
+      if (metadata.members !== undefined) {
+        if (!Array.isArray(metadata.members) || metadata.members.some(member =>
+          !Array.isArray(member) || member.length !== 2 ||
+          typeof member[0] !== "string" || typeof member[1] !== "string")) {
+          throw new Error(`members debe ser una lista de pares [firma, descripción] en ${path.basename(metadataPath)}.`);
+        }
+        record.members = metadata.members;
+      }
       if (metadata.dependencies !== undefined) {
         if (!Array.isArray(metadata.dependencies)) {
           throw new Error(`dependencies debe ser una lista en ${path.basename(metadataPath)}.`);

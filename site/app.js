@@ -83,7 +83,7 @@ const standardModules = [
     members: [["abrir(ruta?)", "Abre o crea una base embebida; sin ruta, usa :memoria:. Devuelve un mapa con ruta y motor."],
       ["consultar(ruta, sql, parametros?)", "Ejecuta SQL en una base abierta. Los parámetros opcionales son una lista para los marcadores ?."],
       ["conectar_externo(motor)", "Comprueba si el cliente nativo del motor está disponible; no crea una sesión SQL remota."]] },
-  { name: "redes.ip", aliases: ["ip"], description: "Consulta el nombre del equipo local.",
+  { name: "redes.ip", aliases: [], description: "Consulta el nombre del equipo local; usa `conseguir redes.ip`.",
     members: [["local()", "Devuelve el hostname; en plataformas no Windows usa localhost."]] },
   { name: "redes.http", aliases: ["http", "web.http"], description: "Realiza solicitudes HTTP GET.",
     members: [["obtener(url)", "Devuelve el cuerpo de la respuesta como texto. La implementación actual está disponible en Windows."]] },
@@ -112,6 +112,8 @@ const standardModuleGrid = document.querySelector("#standard-modules");
 const communityModuleGrid = document.querySelector("#community-modules");
 const registryStatus = document.querySelector("#registry-status");
 const communityEmpty = document.querySelector("#community-empty");
+const modulePublisherEndpoint = "https://esp-module-publisher.religobri.workers.dev/submit";
+const turnstileSiteKey = "0x4AAAAAAFv0zkIbL12231Ag";
 
 function makeKeywordCard([name, description, tag]) {
   const article = document.createElement("article");
@@ -249,6 +251,111 @@ document.addEventListener("keydown", event => {
     document.querySelector("#language-search").focus();
   }
 });
+
+function configurarPublicacionModulo() {
+  const form = document.querySelector("#module-submit-form");
+  if (!form) return;
+
+  const submitButton = document.querySelector("#module-submit-button");
+  const status = document.querySelector("#module-submit-status");
+  const widget = document.querySelector("#module-turnstile");
+  let token = "";
+  let widgetId;
+
+  const endpointValido = (() => {
+    try {
+      return new URL(modulePublisherEndpoint).protocol === "https:";
+    } catch {
+      return false;
+    }
+  })();
+  if (!endpointValido || !turnstileSiteKey) return;
+
+  status.textContent = "Cargando la verificación antispam…";
+  const script = document.createElement("script");
+  script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+  script.async = true;
+  script.defer = true;
+  script.onload = () => {
+    if (!window.turnstile) {
+      status.textContent = "No se pudo cargar la verificación antispam.";
+      return;
+    }
+    widgetId = window.turnstile.render(widget, {
+      sitekey: turnstileSiteKey,
+      callback: value => {
+        token = value;
+        submitButton.disabled = false;
+        status.textContent = "Completa los datos y publica tu módulo.";
+      },
+      "expired-callback": () => {
+        token = "";
+        submitButton.disabled = true;
+        status.textContent = "La verificación caducó. Complétala otra vez.";
+      },
+      "error-callback": () => {
+        token = "";
+        submitButton.disabled = true;
+        status.textContent = "No se pudo verificar el envío. Recarga la página para intentarlo de nuevo.";
+      }
+    });
+  };
+  script.onerror = () => {
+    status.textContent = "No se pudo cargar la verificación antispam.";
+  };
+  document.head.append(script);
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    if (!token) {
+      status.textContent = "Completa la verificación antispam antes de publicar.";
+      return;
+    }
+
+    const data = new FormData(form);
+    const source = data.get("source");
+    if (new TextEncoder().encode(source).byteLength > 1024 * 1024) {
+      status.textContent = "El código supera el límite de 1 MiB.";
+      return;
+    }
+
+    submitButton.disabled = true;
+    status.textContent = "Publicando el módulo…";
+    try {
+      const response = await fetch(modulePublisherEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          description: data.get("description"),
+          source,
+          turnstileToken: token
+        })
+      });
+      const text = await response.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch {
+        throw new Error(`El servicio de publicación devolvió una respuesta inválida (HTTP ${response.status}).`);
+      }
+      if (!response.ok) throw new Error(result.error || `Falló la publicación (HTTP ${response.status}).`);
+      form.reset();
+      status.textContent = result.message || "Módulo publicado; espera el despliegue del catálogo.";
+      token = "";
+      window.turnstile.reset(widgetId);
+    } catch (error) {
+      status.textContent = error instanceof Error ? error.message : "No se pudo publicar el módulo.";
+      if (window.turnstile && widgetId !== undefined) window.turnstile.reset(widgetId);
+      token = "";
+    } finally {
+      submitButton.disabled = true;
+    }
+  });
+}
+
+configurarPublicacionModulo();
 
 async function loadRegistry() {
   try {

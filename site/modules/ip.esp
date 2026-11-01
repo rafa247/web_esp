@@ -1,0 +1,759 @@
+privada funcion _es_digito(caracter)
+    variable digitos = "0123456789"
+    variable i = 0
+    mientras i < longitud(digitos)
+        si caracter == digitos[i]
+            devolver verdadero
+        fin
+        i = i + 1
+    fin
+    devolver falso
+fin
+
+privada funcion _analizar_ipv4(direccion)
+    si tipo(direccion) != "texto"
+        devolver {valido: falso, octetos: [], entero: 0}
+    fin
+
+    variable octetos = []
+    variable segmento = ""
+    variable invalido = falso
+    variable i = 0
+    mientras i < longitud(direccion)
+        variable caracter = direccion[i]
+        si caracter == "."
+            si longitud(segmento) == 0 o longitud(segmento) > 3
+                invalido = verdadero
+                romper
+            fin
+            si longitud(segmento) > 1 y segmento[0] == "0"
+                invalido = verdadero
+                romper
+            fin
+            variable octeto = entero(segmento)
+            si octeto < 0 o octeto > 255
+                invalido = verdadero
+                romper
+            fin
+            octetos.agregar(octeto)
+            segmento = ""
+        sino
+            si no _es_digito(caracter)
+                invalido = verdadero
+                romper
+            fin
+            segmento = segmento + caracter
+            si longitud(segmento) > 3
+                invalido = verdadero
+                romper
+            fin
+        fin
+        i = i + 1
+    fin
+
+    si invalido o longitud(segmento) == 0 o longitud(segmento) > 3
+        devolver {valido: falso, octetos: [], entero: 0}
+    fin
+    si longitud(segmento) > 1 y segmento[0] == "0"
+        devolver {valido: falso, octetos: [], entero: 0}
+    fin
+    variable ultimo = entero(segmento)
+    si ultimo < 0 o ultimo > 255
+        devolver {valido: falso, octetos: [], entero: 0}
+    fin
+    octetos.agregar(ultimo)
+    si longitud(octetos) != 4
+        devolver {valido: falso, octetos: [], entero: 0}
+    fin
+
+    variable valor = octetos[0] * 16777216 + octetos[1] * 65536 + octetos[2] * 256 + octetos[3]
+    devolver {valido: verdadero, octetos: octetos, entero: valor}
+fin
+
+privada funcion _analizar_cidr(cidr)
+    si tipo(cidr) != "texto"
+        devolver {valido: falso}
+    fin
+    variable direccion = ""
+    variable texto_prefijo = ""
+    variable separador = falso
+    variable invalido = falso
+    variable i = 0
+    mientras i < longitud(cidr)
+        variable caracter = cidr[i]
+        si caracter == "/"
+            si separador o longitud(direccion) == 0
+                invalido = verdadero
+                romper
+            fin
+            separador = verdadero
+        sino
+            si separador
+                texto_prefijo = texto_prefijo + caracter
+            sino
+                direccion = direccion + caracter
+            fin
+        fin
+        i = i + 1
+    fin
+    si invalido o no separador o longitud(texto_prefijo) == 0 o longitud(texto_prefijo) > 2
+        devolver {valido: falso}
+    fin
+    variable i = 0
+    mientras i < longitud(texto_prefijo)
+        si no _es_digito(texto_prefijo[i])
+            devolver {valido: falso}
+        fin
+        i = i + 1
+    fin
+    si longitud(texto_prefijo) > 1 y texto_prefijo[0] == "0"
+        devolver {valido: falso}
+    fin
+
+    variable analisis = _analizar_ipv4(direccion)
+    variable prefijo = entero(texto_prefijo)
+    si no analisis.valido o prefijo < 0 o prefijo > 32
+        devolver {valido: falso}
+    fin
+    variable tamano = 2 ** (32 - prefijo)
+    variable inicio = entero(analisis.entero / tamano) * tamano
+    variable fin = inicio + tamano - 1
+    devolver {
+        valido: verdadero,
+        direccion: direccion,
+        valor: analisis.entero,
+        prefijo: prefijo,
+        tamano: tamano,
+        red: inicio,
+        broadcast: fin
+    }
+fin
+
+privada funcion _formatear_ipv4(valor)
+    si tipo(valor) != "entero" o valor < 0 o valor > 4294967295
+        devolver nulo
+    fin
+    variable a = entero(valor / 16777216)
+    variable b = entero((valor % 16777216) / 65536)
+    variable c = entero((valor % 65536) / 256)
+    variable d = valor % 256
+    devolver texto(a) + "." + texto(b) + "." + texto(c) + "." + texto(d)
+fin
+
+privada funcion _valor_hexadecimal(caracter)
+    variable digitos = "0123456789abcdef"
+    variable i = 0
+    mientras i < longitud(digitos)
+        si caracter == digitos[i]
+            devolver i
+        fin
+        i = i + 1
+    fin
+    variable mayusculas = "ABCDEF"
+    i = 0
+    mientras i < longitud(mayusculas)
+        si caracter == mayusculas[i]
+            devolver i + 10
+        fin
+        i = i + 1
+    fin
+    devolver -1
+fin
+
+privada funcion _analizar_hextetos(texto_hextetos)
+    variable grupos = []
+    si longitud(texto_hextetos) == 0
+        devolver {valido: verdadero, grupos: grupos}
+    fin
+    variable segmento = ""
+    variable i = 0
+    mientras i < longitud(texto_hextetos)
+        variable caracter = texto_hextetos[i]
+        si caracter == ":"
+            si longitud(segmento) == 0
+                devolver {valido: falso, grupos: []}
+            fin
+            variable numero = 0
+            variable j = 0
+            mientras j < longitud(segmento)
+                variable digito = _valor_hexadecimal(segmento[j])
+                si digito < 0
+                    devolver {valido: falso, grupos: []}
+                fin
+                numero = numero * 16 + digito
+                j = j + 1
+            fin
+            grupos.agregar(numero)
+            segmento = ""
+        sino
+            segmento = segmento + caracter
+            si longitud(segmento) > 4
+                devolver {valido: falso, grupos: []}
+            fin
+        fin
+        i = i + 1
+    fin
+    si longitud(segmento) == 0
+        devolver {valido: falso, grupos: []}
+    fin
+    variable numero = 0
+    variable j = 0
+    mientras j < longitud(segmento)
+        variable digito = _valor_hexadecimal(segmento[j])
+        si digito < 0
+            devolver {valido: falso, grupos: []}
+        fin
+        numero = numero * 16 + digito
+        j = j + 1
+    fin
+    grupos.agregar(numero)
+    devolver {valido: verdadero, grupos: grupos}
+fin
+
+privada funcion _analizar_ipv6(direccion)
+    si tipo(direccion) != "texto" o longitud(direccion) == 0
+        devolver {valido: falso, grupos: []}
+    fin
+    variable izquierda = ""
+    variable derecha = ""
+    variable comprimida = falso
+    variable invalido = falso
+    variable usando_derecha = falso
+    variable i = 0
+    mientras i < longitud(direccion)
+        variable caracter = direccion[i]
+        si caracter == ":"
+            si i + 1 < longitud(direccion) y direccion[i + 1] == ":"
+                si comprimida
+                    invalido = verdadero
+                    romper
+                fin
+                comprimida = verdadero
+                usando_derecha = verdadero
+                i = i + 2
+                si i == longitud(direccion)
+                    romper
+                fin
+                continuar
+            fin
+        fin
+        si usando_derecha
+            derecha = derecha + caracter
+        sino
+            izquierda = izquierda + caracter
+        fin
+        i = i + 1
+    fin
+    si invalido
+        devolver {valido: falso, grupos: []}
+    fin
+
+    variable parte_izquierda = _analizar_hextetos(izquierda)
+    si no parte_izquierda.valido
+        devolver {valido: falso, grupos: []}
+    fin
+    variable grupos = parte_izquierda.grupos
+    si comprimida
+        variable parte_derecha = _analizar_hextetos(derecha)
+        si no parte_derecha.valido o longitud(grupos) + longitud(parte_derecha.grupos) >= 8
+            devolver {valido: falso, grupos: []}
+        fin
+        mientras longitud(grupos) + longitud(parte_derecha.grupos) < 8
+            grupos.agregar(0)
+        fin
+        para grupo en parte_derecha.grupos
+            grupos.agregar(grupo)
+        fin
+    sino
+        si longitud(grupos) != 8
+            devolver {valido: falso, grupos: []}
+        fin
+    fin
+    devolver {valido: verdadero, grupos: grupos}
+fin
+
+privada funcion _formatear_hexteto(valor)
+    variable digitos = "0123456789abcdef"
+    si valor == 0
+        devolver "0"
+    fin
+    variable resultado = ""
+    mientras valor > 0
+        variable digito = valor % 16
+        resultado = digitos[digito] + resultado
+        valor = entero(valor / 16)
+    fin
+    devolver resultado
+fin
+
+privada funcion _formatear_ipv6(grupos)
+    variable mejor_inicio = -1
+    variable mejor_longitud = 1
+    variable inicio = 0
+    mientras inicio < 8
+        si grupos[inicio] == 0
+            variable fin = inicio
+            mientras fin < 8 y grupos[fin] == 0
+                fin = fin + 1
+            fin
+            variable longitud_cero = fin - inicio
+            si longitud_cero > mejor_longitud
+                mejor_inicio = inicio
+                mejor_longitud = longitud_cero
+            fin
+            inicio = fin
+        sino
+            inicio = inicio + 1
+        fin
+    fin
+
+    variable resultado = ""
+    variable i = 0
+    mientras i < 8
+        si i == mejor_inicio
+            si longitud(resultado) == 0
+                resultado = "::"
+            sino
+                resultado = resultado + "::"
+            fin
+            i = i + mejor_longitud
+            si i >= 8
+                romper
+            fin
+        sino
+            si longitud(resultado) > 0 y resultado[longitud(resultado) - 1] != ":"
+                resultado = resultado + ":"
+            fin
+            resultado = resultado + _formatear_hexteto(grupos[i])
+            i = i + 1
+        fin
+    fin
+    devolver resultado
+fin
+
+privada funcion _expandir_ipv6(grupos)
+    variable resultado = ""
+    variable i = 0
+    mientras i < 8
+        si i > 0
+            resultado = resultado + ":"
+        fin
+        resultado = resultado + _formatear_hexteto(grupos[i])
+        i = i + 1
+    fin
+    devolver resultado
+fin
+
+privada funcion _analizar_cidr_ipv6(cidr)
+    si tipo(cidr) != "texto"
+        devolver {valido: falso}
+    fin
+    variable direccion = ""
+    variable texto_prefijo = ""
+    variable separador = falso
+    variable invalido = falso
+    variable i = 0
+    mientras i < longitud(cidr)
+        variable caracter = cidr[i]
+        si caracter == "/"
+            si separador o longitud(direccion) == 0
+                invalido = verdadero
+                romper
+            fin
+            separador = verdadero
+        sino
+            si separador
+                texto_prefijo = texto_prefijo + caracter
+            sino
+                direccion = direccion + caracter
+            fin
+        fin
+        i = i + 1
+    fin
+    si invalido o no separador o longitud(texto_prefijo) == 0 o longitud(texto_prefijo) > 3
+        devolver {valido: falso}
+    fin
+    i = 0
+    mientras i < longitud(texto_prefijo)
+        si no _es_digito(texto_prefijo[i])
+            devolver {valido: falso}
+        fin
+        i = i + 1
+    fin
+    si longitud(texto_prefijo) > 1 y texto_prefijo[0] == "0"
+        devolver {valido: falso}
+    fin
+    variable analisis = _analizar_ipv6(direccion)
+    variable prefijo = entero(texto_prefijo)
+    si no analisis.valido o prefijo < 0 o prefijo > 128
+        devolver {valido: falso}
+    fin
+    devolver {valido: verdadero, grupos: analisis.grupos, prefijo: prefijo, direccion: direccion}
+fin
+
+privada funcion _red_ipv6_grupos(grupos, prefijo)
+    variable resultado = []
+    variable i = 0
+    mientras i < 8
+        variable bits = prefijo - i * 16
+        si bits < 0
+            bits = 0
+        fin
+        si bits > 16
+            bits = 16
+        fin
+        variable tamano = 2 ** (16 - bits)
+        resultado.agregar(entero(grupos[i] / tamano) * tamano)
+        i = i + 1
+    fin
+    devolver resultado
+fin
+
+privada funcion _ultima_ipv6(cidr)
+    variable grupos_red = _red_ipv6_grupos(cidr.grupos, cidr.prefijo)
+    variable resultado = []
+    variable i = 0
+    mientras i < 8
+        variable bits = cidr.prefijo - i * 16
+        si bits < 0
+            bits = 0
+        fin
+        si bits > 16
+            bits = 16
+        fin
+        variable host = (2 ** (16 - bits)) - 1
+        resultado.agregar(grupos_red[i] + host)
+        i = i + 1
+    fin
+    devolver _formatear_ipv6(resultado)
+fin
+
+publica funcion analizar_ipv6(direccion)
+    variable resultado = _analizar_ipv6(direccion)
+    si no resultado.valido
+        devolver {valido: falso, version: 6, direccion: direccion, grupos: []}
+    fin
+    devolver {
+        valido: verdadero,
+        version: 6,
+        direccion: direccion,
+        grupos: resultado.grupos,
+        canonica: _formatear_ipv6(resultado.grupos),
+        expandida: _expandir_ipv6(resultado.grupos)
+    }
+fin
+
+publica funcion validar_ipv6(direccion)
+    devolver _analizar_ipv6(direccion).valido
+fin
+
+publica funcion canonizar_ipv6(direccion)
+    variable resultado = _analizar_ipv6(direccion)
+    si no resultado.valido
+        devolver nulo
+    fin
+    devolver _formatear_ipv6(resultado.grupos)
+fin
+
+publica funcion expandir_ipv6(direccion)
+    variable resultado = _analizar_ipv6(direccion)
+    si no resultado.valido
+        devolver nulo
+    fin
+    devolver _expandir_ipv6(resultado.grupos)
+fin
+
+publica funcion red_ipv6(direccion, prefijo)
+    si tipo(prefijo) != "entero" o prefijo < 0 o prefijo > 128
+        devolver nulo
+    fin
+    variable analisis = _analizar_ipv6(direccion)
+    si no analisis.valido
+        devolver nulo
+    fin
+    devolver _formatear_ipv6(_red_ipv6_grupos(analisis.grupos, prefijo))
+fin
+
+publica funcion contiene_ipv6(cidr, direccion)
+    variable red_cidr = _analizar_cidr_ipv6(cidr)
+    variable ip = _analizar_ipv6(direccion)
+    si no red_cidr.valido o no ip.valido
+        devolver falso
+    fin
+    variable red_calculada = _red_ipv6_grupos(red_cidr.grupos, red_cidr.prefijo)
+    variable ip_calculada = _red_ipv6_grupos(ip.grupos, red_cidr.prefijo)
+    variable i = 0
+    mientras i < 8
+        si red_calculada[i] != ip_calculada[i]
+            devolver falso
+        fin
+        i = i + 1
+    fin
+    devolver verdadero
+fin
+
+publica funcion es_loopback_ipv6(direccion)
+    variable ip = _analizar_ipv6(direccion)
+    si no ip.valido
+        devolver falso
+    fin
+    variable i = 0
+    mientras i < 7
+        si ip.grupos[i] != 0
+            devolver falso
+        fin
+        i = i + 1
+    fin
+    devolver ip.grupos[7] == 1
+fin
+
+publica funcion es_no_especificada_ipv6(direccion)
+    variable ip = _analizar_ipv6(direccion)
+    si no ip.valido
+        devolver falso
+    fin
+    variable i = 0
+    mientras i < 8
+        si ip.grupos[i] != 0
+            devolver falso
+        fin
+        i = i + 1
+    fin
+    devolver verdadero
+fin
+
+publica funcion es_privada_ipv6(direccion)
+    variable ip = _analizar_ipv6(direccion)
+    si no ip.valido
+        devolver falso
+    fin
+    devolver ip.grupos[0] >= 64512 y ip.grupos[0] <= 65023
+fin
+
+publica funcion es_link_local_ipv6(direccion)
+    variable ip = _analizar_ipv6(direccion)
+    si no ip.valido
+        devolver falso
+    fin
+    devolver ip.grupos[0] >= 65152 y ip.grupos[0] <= 65215
+fin
+
+publica funcion es_multicast_ipv6(direccion)
+    variable ip = _analizar_ipv6(direccion)
+    si no ip.valido
+        devolver falso
+    fin
+    devolver ip.grupos[0] >= 65280 y ip.grupos[0] <= 65535
+fin
+
+publica funcion es_global_ipv6(direccion)
+    variable ip = _analizar_ipv6(direccion)
+    si no ip.valido
+        devolver falso
+    fin
+    devolver ip.grupos[0] >= 8192 y ip.grupos[0] <= 16383
+fin
+
+publica funcion analizar(direccion)
+    variable resultado = _analizar_ipv4(direccion)
+    si no resultado.valido
+        devolver analizar_ipv6(direccion)
+    fin
+    devolver {
+        valido: resultado.valido,
+        version: 4,
+        direccion: direccion,
+        octetos: resultado.octetos,
+        entero: resultado.entero
+    }
+fin
+
+publica funcion validar(direccion)
+    devolver _analizar_ipv4(direccion).valido o _analizar_ipv6(direccion).valido
+fin
+
+publica funcion version(direccion)
+    si _analizar_ipv4(direccion).valido
+        devolver 4
+    fin
+    si _analizar_ipv6(direccion).valido
+        devolver 6
+    fin
+    devolver 0
+fin
+
+publica funcion a_entero(direccion)
+    variable resultado = _analizar_ipv4(direccion)
+    si no resultado.valido
+        devolver nulo
+    fin
+    devolver resultado.entero
+fin
+
+publica funcion desde_entero(valor)
+    devolver _formatear_ipv4(valor)
+fin
+
+publica funcion mascara(prefijo)
+    si tipo(prefijo) != "entero" o prefijo < 0 o prefijo > 32
+        devolver nulo
+    fin
+    variable tamano = 2 ** (32 - prefijo)
+    variable valor = (4294967296 - tamano)
+    devolver _formatear_ipv4(valor)
+fin
+
+publica funcion prefijo_de_mascara(direccion)
+    variable analisis = _analizar_ipv4(direccion)
+    si no analisis.valido
+        devolver nulo
+    fin
+    variable encontrado = falso
+    variable resultado = 0
+    variable prefijo = 0
+    mientras prefijo <= 32
+        si mascara(prefijo) == direccion
+            encontrado = verdadero
+            resultado = prefijo
+            romper
+        fin
+        prefijo = prefijo + 1
+    fin
+    si no encontrado
+        devolver nulo
+    fin
+    devolver resultado
+fin
+
+publica funcion red(direccion, prefijo)
+    si tipo(prefijo) != "entero" o prefijo < 0
+        devolver nulo
+    fin
+    si validar_ipv6(direccion)
+        devolver red_ipv6(direccion, prefijo)
+    fin
+    si prefijo > 32
+        devolver nulo
+    fin
+    variable analisis = _analizar_ipv4(direccion)
+    si no analisis.valido
+        devolver nulo
+    fin
+    variable tamano = 2 ** (32 - prefijo)
+    devolver _formatear_ipv4(entero(analisis.entero / tamano) * tamano)
+fin
+
+publica funcion broadcast(direccion, prefijo)
+    si tipo(prefijo) != "entero" o prefijo < 0 o prefijo > 32
+        devolver nulo
+    fin
+    variable analisis = _analizar_ipv4(direccion)
+    si no analisis.valido
+        devolver nulo
+    fin
+    variable tamano = 2 ** (32 - prefijo)
+    variable inicio = entero(analisis.entero / tamano) * tamano
+    devolver _formatear_ipv4(inicio + tamano - 1)
+fin
+
+publica funcion contiene(cidr, direccion)
+    variable red_cidr = _analizar_cidr(cidr)
+    variable ip = _analizar_ipv4(direccion)
+    si no red_cidr.valido o no ip.valido
+        devolver contiene_ipv6(cidr, direccion)
+    fin
+    devolver entero(ip.entero / red_cidr.tamano) == entero(red_cidr.red / red_cidr.tamano)
+fin
+
+publica funcion misma_red(primera, segunda, prefijo)
+    si tipo(prefijo) != "entero" o prefijo < 0
+        devolver falso
+    fin
+    variable a = _analizar_ipv4(primera)
+    variable b = _analizar_ipv4(segunda)
+    si no a.valido o no b.valido
+        si prefijo > 128 o no validar_ipv6(primera) o no validar_ipv6(segunda)
+            devolver falso
+        fin
+        devolver red_ipv6(primera, prefijo) == red_ipv6(segunda, prefijo)
+    fin
+    si prefijo > 32
+        devolver falso
+    fin
+    variable tamano = 2 ** (32 - prefijo)
+    devolver entero(a.entero / tamano) == entero(b.entero / tamano)
+fin
+
+publica funcion rango(cidr)
+    variable red_cidr = _analizar_cidr(cidr)
+    si no red_cidr.valido
+        variable red_ipv6_cidr = _analizar_cidr_ipv6(cidr)
+        si no red_ipv6_cidr.valido
+            devolver nulo
+        fin
+        variable red_ipv6_texto = _formatear_ipv6(
+            _red_ipv6_grupos(red_ipv6_cidr.grupos, red_ipv6_cidr.prefijo))
+        devolver {
+            version: 6,
+            direccion: red_ipv6_cidr.direccion,
+            cidr: texto(red_ipv6_cidr.direccion) + "/" + texto(red_ipv6_cidr.prefijo),
+            prefijo: red_ipv6_cidr.prefijo,
+            red: red_ipv6_texto,
+            ultima: _ultima_ipv6(red_ipv6_cidr),
+            bits_host: 128 - red_ipv6_cidr.prefijo
+        }
+    fin
+    variable primera = red_cidr.red
+    variable ultima = red_cidr.broadcast
+    variable utilizables = red_cidr.tamano
+    si red_cidr.prefijo < 31
+        primera = primera + 1
+        ultima = ultima - 1
+        utilizables = utilizables - 2
+    fin
+    devolver {
+        version: 4,
+        direccion: red_cidr.direccion,
+        cidr: texto(red_cidr.direccion) + "/" + texto(red_cidr.prefijo),
+        prefijo: red_cidr.prefijo,
+        mascara: mascara(red_cidr.prefijo),
+        red: _formatear_ipv4(red_cidr.red),
+        broadcast: _formatear_ipv4(red_cidr.broadcast),
+        primera: _formatear_ipv4(primera),
+        ultima: _formatear_ipv4(ultima),
+        cantidad: red_cidr.tamano,
+        hosts_utilizables: utilizables
+    }
+fin
+
+publica funcion es_privada(direccion)
+    variable ip = a_entero(direccion)
+    si ip == nulo
+        devolver falso
+    fin
+    devolver (ip >= 167772160 y ip <= 184549375) o (ip >= 2886729728 y ip <= 2887778303) o (ip >= 3232235520 y ip <= 3232301055)
+fin
+
+publica funcion es_loopback(direccion)
+    variable ip = a_entero(direccion)
+    si ip == nulo
+        devolver falso
+    fin
+    devolver ip >= 2130706432 y ip <= 2147483647
+fin
+
+publica funcion es_link_local(direccion)
+    variable ip = a_entero(direccion)
+    si ip == nulo
+        devolver falso
+    fin
+    devolver ip >= 2851995648 y ip <= 2852061183
+fin
+
+publica funcion es_multicast(direccion)
+    variable ip = a_entero(direccion)
+    si ip == nulo
+        devolver falso
+    fin
+    devolver ip >= 3758096384 y ip <= 4026531839
+fin

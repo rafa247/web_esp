@@ -1,4 +1,71 @@
 {
   "schemaVersion": 1,
-  "modules": []
+  "modules": [
+    {
+      "name": "ip",
+      "file": "modules/ip.esp",
+      "sha256": "e488f9997cf77f578819d68148b7eeb280ad59bbe59afd0929bcbadbcae8a070",
+      "version": "1.0.0",
+      "description": "Herramientas IPv4 e IPv6 en ESP: validación, conversión, CIDR, subredes, rangos y clasificación.",
+      "members": [
+        [
+          "analizar(direccion)",
+          "Devuelve la familia y los datos analizados de una dirección IPv4 o IPv6."
+        ],
+        [
+          "validar(direccion) / version(direccion)",
+          "Valida una dirección y devuelve su familia (4, 6 o 0)."
+        ],
+        [
+          "analizar_ipv6 / validar_ipv6 / canonizar_ipv6 / expandir_ipv6",
+          "Analiza y normaliza direcciones IPv6 comprimidas o expandidas."
+        ],
+        [
+          "a_entero(direccion)",
+          "Convierte IPv4 a un entero de 32 bits; devuelve nulo si no es válida."
+        ],
+        [
+          "desde_entero(valor)",
+          "Convierte un entero de 0 a 4294967295 a IPv4."
+        ],
+        [
+          "mascara(prefijo)",
+          "Calcula la máscara IPv4 para un prefijo de 0 a 32."
+        ],
+        [
+          "prefijo_de_mascara(mascara)",
+          "Obtiene el prefijo de una máscara contigua."
+        ],
+        [
+          "red(direccion, prefijo) / red_ipv6(direccion, prefijo)",
+          "Calcula la dirección de red IPv4 o IPv6."
+        ],
+        [
+          "broadcast(direccion, prefijo)",
+          "Calcula la dirección de broadcast."
+        ],
+        [
+          "contiene(cidr, direccion) / contiene_ipv6(cidr, direccion)",
+          "Comprueba si una dirección pertenece a una red CIDR."
+        ],
+        [
+          "misma_red(ip1, ip2, prefijo)",
+          "Comprueba si dos direcciones comparten subred."
+        ],
+        [
+          "rango(cidr)",
+          "Devuelve red y extremos; para IPv4 también broadcast y hosts utilizables."
+        ],
+        [
+          "es_privada / es_loopback / es_link_local / es_multicast(direccion)",
+          "Clasifica rangos IPv4."
+        ],
+        [
+          "es_loopback_ipv6 / es_no_especificada_ipv6 / es_privada_ipv6 / es_link_local_ipv6 / es_multicast_ipv6 / es_global_ipv6",
+          "Clasifica rangos IPv6 habituales."
+        ]
+      ],
+      "dependencies": []
+    }
+  ]
 }

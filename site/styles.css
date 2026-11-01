@@ -111,11 +111,22 @@ kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color
 .notice { margin: 16px 0 0; padding: 13px 15px; border-left: 2px solid #f4c66a; background: rgba(244,198,106,.06); color: var(--muted); font-size: 12px; }
 .notice strong { color: #f4c66a; }
 
-.section-publish { display: grid; grid-template-columns: 1fr .9fr; align-items: center; gap: 48px; }
+.section-publish { display: grid; grid-template-columns: 1fr .9fr; align-items: start; gap: 48px; }
 .publish-copy h2 { margin-bottom: 13px; font-size: clamp(30px, 3.2vw, 40px); }
 .publish-copy > p:not(.eyebrow) { color: var(--muted); font-size: 14px; }
 .publish-steps { padding-left: 20px; color: var(--muted); font-size: 13px; }
 .publish-steps li { padding: 5px 0; }
+.publish-form { display: grid; gap: 10px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.publish-form label { margin-top: 5px; font-size: 13px; font-weight: 700; }
+.publish-form input, .publish-form textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; outline: 0; background: #101522; color: var(--text); font: 13px var(--body); }
+.publish-form textarea { min-height: 220px; resize: vertical; font: 12px/1.7 var(--mono); tab-size: 4; }
+.publish-form input:focus, .publish-form textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(84,229,208,.12); }
+.publish-form input::placeholder, .publish-form textarea::placeholder { color: #738098; }
+.publish-form small { color: var(--muted); font-size: 11px; }
+.publish-form .button { justify-self: start; }
+.publish-form .button:disabled { cursor: not-allowed; opacity: .5; transform: none; }
+.turnstile-widget { min-height: 66px; margin-top: 5px; }
+.form-status { min-height: 1.5em; margin: 0; color: var(--muted); font-size: 12px; }
 .publish-example { padding-top: 16px; }
 .publish-example > .code-label { display: block; padding: 0 20px; }
 .publish-example pre { padding-top: 13px; font-size: 11px; }
