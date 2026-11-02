@@ -1,0 +1,3 @@
+publica funcion hola()
+    mostrar("Hola")
+fin
