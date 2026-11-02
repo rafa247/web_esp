@@ -11,7 +11,7 @@ El sitio no usa paquetes npm ni frameworks. La web usa APIs nativas del navegado
 | Node.js | 18 o posterior; probado con 24.18.0 | MIT ([licencia](https://github.com/nodejs/node/blob/main/LICENSE)) | Generar el índice y los SHA-256 de los módulos con APIs integradas; no instala paquetes. |
 | `curl` | Debe admitir `--proto`, `--proto-redir` y `--max-filesize`; probado con 8.13.0 | MIT ([licencia](https://curl.se/docs/copyright.html)) | Descargar el índice y los módulos por HTTPS desde el intérprete. |
 | Cloudflare Workers y Turnstile | Plan gratuito disponible; consulta los límites vigentes | Propietario | Recibir envíos anónimos del formulario web y bloquear spam automatizado. |
-| GitHub CLI (`gh`) | Opcional | MIT ([licencia](https://github.com/cli/cli/blob/trunk/LICENSE)) | Publicar módulos desde un programa ESP con `exportar ... como modulo`; el formulario web no lo requiere. |
+| `ESP_MODULE_PUBLISHER_URL` | Opcional | — | Cambiar el endpoint HTTPS usado por `exportar ... como modulo`; por defecto usa el publicador de este registro. |
 
 El workflow de Pages usa `actions/checkout@v4`, `actions/configure-pages@v5`, `actions/upload-pages-artifact@v3` y `actions/deploy-pages@v4`, todos con licencia MIT. Esas etiquetas fijan la versión mayor de cada acción.
 
@@ -68,6 +68,18 @@ El token de GitHub solo vive como secreto del Worker; nunca lo pongas en JavaScr
 
 El formulario está desactivado hasta configurar la URL del Worker y la clave pública de Turnstile. El módulo comunitario [`ip.esp`](./modules/ip.esp) está incluido en el registro; el módulo nativo antiguo de hostname sigue disponible como `conseguir redes.ip`.
 
+### Publicar desde un programa ESP
+
+`exportar nombre como modulo fuente, manifiesto?` envía el módulo directamente al Worker, sin Git, GitHub CLI, cuenta ni desafío Turnstile. El manifiesto JSON es opcional; puede incluir `description`, `version` y `dependencies`:
+
+```esp
+exportar hola como modulo "publica funcion hola()\n    mostrar(\"Hola\")\nfin\n", "{\"description\":\"Imprime Hola en pantalla.\"}"
+```
+
+El endpoint predeterminado es el publicador de este registro. Para usar otro, configura `ESP_MODULE_PUBLISHER_URL` con una URL HTTPS terminada en `/submit-esp`. Se requiere `curl` en `PATH`.
+
+La ruta directa de `exportar` es anónima y no usa Turnstile: cualquiera que conozca el endpoint puede enviar módulos únicos y provocar ejecuciones del workflow de Pages. El Worker valida el nombre, tamaño, descripción y metadatos, y no permite sobrescribir módulos existentes, pero eso no evita el spam. Para envíos desde navegador, usa el formulario, que sí exige Turnstile.
+
 ## Compilación desde ESP
 
 `exportar destino como exe fuente` compila el texto ESP a un ejecutable del sistema actual. Los formatos disponibles incluyen `exe`, `cpp`, `ll`, `estatica` y la biblioteca dinámica nativa (`dll` en Windows, `so` en Linux o `dylib` en macOS). Las bibliotecas exportan `esp_run(void)` mediante C ABI y generan una cabecera `.h` adyacente; devuelve `0` si el programa ESP termina correctamente y `1` si falla. No transfiere memoria a través de la ABI.
@@ -86,7 +98,7 @@ En PowerShell configura el repositorio para la sesión actual así:
 $env:ESP_MODULE_REGISTRY_REPOSITORY = "rafa247/web_esp"
 ```
 
-Para buscar e instalar módulos, `curl` debe estar disponible en `PATH`. La publicación desde ESP con `exportar ... como modulo` es opcional y requiere GitHub CLI (`gh`) autenticado; no requiere Git. Para publicar sin Git ni cuenta, usa el formulario web.
+Para buscar, instalar y publicar módulos desde ESP, `curl` debe estar disponible en `PATH`. Configura `ESP_MODULE_PUBLISHER_URL` solo si necesitas reemplazar el endpoint predeterminado del Worker.
 
 ## Contribuir módulos
 

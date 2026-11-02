@@ -1,4 +1,5 @@
 const MAX_SOURCE_BYTES = 1024 * 1024;
+const MAX_REQUEST_BYTES = MAX_SOURCE_BYTES * 6 + 16 * 1024;
 const API_ROOT = "https://api.github.com";
 const TURNSTILE_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -68,6 +69,45 @@ async function comprobarTurnstile(token, request, env, origin) {
     throw new SubmissionError(400, "Completa de nuevo la verificación antispam.");
 }
 
+function serializarMetadatos(description, rawMetadata) {
+  let metadata = {};
+  if (rawMetadata !== undefined && rawMetadata !== "") {
+    if (typeof rawMetadata !== "string" || rawMetadata.length > 16 * 1024)
+      throw new SubmissionError(400, "Los metadatos del módulo no son válidos.");
+    try {
+      metadata = JSON.parse(rawMetadata);
+    } catch {
+      throw new SubmissionError(400, "Los metadatos deben ser JSON válido.");
+    }
+    if (!metadata || typeof metadata !== "object" || Array.isArray(metadata))
+      throw new SubmissionError(400, "Los metadatos deben ser un objeto JSON.");
+  }
+  if (metadata.version !== undefined &&
+      (typeof metadata.version !== "string" || !/^\d+\.\d+\.\d+$/.test(metadata.version)))
+    throw new SubmissionError(400, "La versión del módulo debe usar el formato X.Y.Z.");
+  if (metadata.members !== undefined &&
+      (!Array.isArray(metadata.members) || metadata.members.some(member =>
+        !Array.isArray(member) || member.length !== 2 ||
+        typeof member[0] !== "string" || typeof member[1] !== "string")))
+    throw new SubmissionError(400, "members debe ser una lista de pares [firma, descripción].");
+  if (metadata.dependencies !== undefined) {
+    if (!Array.isArray(metadata.dependencies))
+      throw new SubmissionError(400, "dependencies debe ser una lista.");
+    const names = new Set();
+    for (const dependency of metadata.dependencies) {
+      const item = typeof dependency === "string" ? { name: dependency } : dependency;
+      if (!item || typeof item.name !== "string" || !/^[a-zA-Z0-9_-]+$/.test(item.name) ||
+          names.has(item.name) ||
+          (item.version !== undefined &&
+           (typeof item.version !== "string" || !/^\d+\.\d+\.\d+$/.test(item.version))))
+        throw new SubmissionError(400, "Hay una dependencia no válida en los metadatos.");
+      names.add(item.name);
+    }
+  }
+  metadata.description = description.trim();
+  return `${JSON.stringify(metadata, null, 2)}\n`;
+}
+
 async function leerCuerpoLimitado(request, limite) {
   const lector = request.body?.getReader();
   if (!lector) return "";
@@ -100,7 +140,7 @@ async function leerCuerpoLimitado(request, limite) {
   }
 }
 
-async function enviarModulo(request, env, origin) {
+async function enviarModulo(request, env, origin, requireTurnstile) {
   if (!env.GITHUB_TOKEN || !env.REGISTRY_OWNER || !env.REGISTRY_REPO)
     throw new SubmissionError(503, "El publicador todavía no está configurado.");
   if (!/^[-A-Za-z0-9_.]+$/.test(env.REGISTRY_OWNER) || !/^[-A-Za-z0-9_.]+$/.test(env.REGISTRY_REPO) ||
@@ -109,9 +149,9 @@ async function enviarModulo(request, env, origin) {
     throw new SubmissionError(503, "La configuración del repositorio no es válida.");
 
   const contentLength = Number(request.headers.get("Content-Length") || 0);
-  if (contentLength > MAX_SOURCE_BYTES + 16 * 1024)
+  if (contentLength > MAX_REQUEST_BYTES)
     throw new SubmissionError(413, "El envío supera el tamaño máximo permitido.");
-  const bodyText = await leerCuerpoLimitado(request, MAX_SOURCE_BYTES + 16 * 1024);
+  const bodyText = await leerCuerpoLimitado(request, MAX_REQUEST_BYTES);
 
   let payload;
   try {
@@ -122,7 +162,7 @@ async function enviarModulo(request, env, origin) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload))
     throw new SubmissionError(400, "El envío no tiene el formato esperado.");
 
-  const { name, description, source, turnstileToken } = payload;
+  const { name, description, source, turnstileToken, metadata } = payload;
   if (typeof name !== "string" || !/^[a-zA-Z0-9_-]{1,64}$/.test(name))
     throw new SubmissionError(400, "El nombre admite letras, números, guion y guion bajo (máximo 64).");
   if (typeof description !== "string" || description.trim().length < 8 || description.length > 280)
@@ -131,10 +171,12 @@ async function enviarModulo(request, env, origin) {
     throw new SubmissionError(400, "El código ESP no puede estar vacío.");
   if (new TextEncoder().encode(source).byteLength > MAX_SOURCE_BYTES)
     throw new SubmissionError(413, "El código ESP supera el límite de 1 MiB.");
-  if (typeof turnstileToken !== "string" || !turnstileToken || turnstileToken.length > 2048)
-    throw new SubmissionError(400, "Completa la verificación antispam.");
-
-  await comprobarTurnstile(turnstileToken, request, env, origin);
+  const moduleMetadata = serializarMetadatos(description, metadata);
+  if (requireTurnstile) {
+    if (typeof turnstileToken !== "string" || !turnstileToken || turnstileToken.length > 2048)
+      throw new SubmissionError(400, "Completa la verificación antispam.");
+    await comprobarTurnstile(turnstileToken, request, env, origin);
+  }
 
   const branch = (await githubRequest(env, "", { method: "GET" })).default_branch;
   if (typeof branch !== "string" || !branch)
@@ -171,7 +213,6 @@ async function enviarModulo(request, env, origin) {
   const head = await githubRequest(env, `branches/${encodeURIComponent(branch)}`, { method: "GET" });
   const baseCommit = head.commit.sha;
   const baseTree = (await githubRequest(env, `git/commits/${baseCommit}`, { method: "GET" })).tree.sha;
-  const metadata = `${JSON.stringify({ description: description.trim() }, null, 2)}\n`;
   const blobs = await Promise.all([
     githubRequest(env, "git/blobs", {
       method: "POST",
@@ -179,7 +220,7 @@ async function enviarModulo(request, env, origin) {
     }),
     githubRequest(env, "git/blobs", {
       method: "POST",
-      body: JSON.stringify({ content: metadata, encoding: "utf-8" })
+      body: JSON.stringify({ content: moduleMetadata, encoding: "utf-8" })
     })
   ]);
   const tree = await githubRequest(env, "git/trees", {
@@ -212,11 +253,17 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin");
     const allowedOrigin = configuredOrigin(env);
-    if (!allowedOrigin || origin !== allowedOrigin)
-      return jsonResponse({ error: "Origen no autorizado." }, 403);
-    if (new URL(request.url).pathname !== "/submit")
+    const path = new URL(request.url).pathname;
+    const isEspExport = path === "/submit-esp";
+    if (path !== "/submit" && !isEspExport)
       return jsonResponse({ error: "Ruta no encontrada." }, 404, allowedOrigin);
-    if (request.method === "OPTIONS")
+    if (isEspExport) {
+      if (origin)
+        return jsonResponse({ error: "Origen no autorizado." }, 403);
+    } else if (!allowedOrigin || origin !== allowedOrigin) {
+      return jsonResponse({ error: "Origen no autorizado." }, 403);
+    }
+    if (!isEspExport && request.method === "OPTIONS")
       return jsonResponse({}, 204, allowedOrigin);
     if (request.method !== "POST")
       return jsonResponse({ error: "Método no permitido." }, 405, allowedOrigin);
@@ -224,7 +271,7 @@ export default {
       return jsonResponse({ error: "Se requiere Content-Type application/json." }, 415, allowedOrigin);
 
     try {
-      const resultado = await enviarModulo(request, env, allowedOrigin);
+      const resultado = await enviarModulo(request, env, allowedOrigin, !isEspExport);
       return jsonResponse({
         message: "Módulo publicado. El catálogo estará disponible cuando termine el despliegue de la web.",
         ...resultado
