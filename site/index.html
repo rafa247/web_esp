@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP 2.0.0 — Documentación Oficial y Ejemplos</title>
+    <title>ESP 2.0.0 — Documentación Completa de Palabras Clave y Ejemplos</title>
     <style>
         :root {
             --bg: #080c17;
@@ -28,13 +28,13 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(8, 12, 23, 0.9);
+            background: rgba(8, 12, 23, 0.92);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             padding: 0.75rem 1.5rem;
         }
         .nav-inner {
-            max-width: 1120px;
+            max-width: 1140px;
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
@@ -160,7 +160,7 @@
         .btn-copiar:hover { border-color: var(--accent-2); }
 
         main {
-            max-width: 1060px;
+            max-width: 1080px;
             margin: 0 auto;
             padding: 3rem 1.5rem 5rem;
         }
@@ -171,7 +171,8 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.5rem;
         }
-        h3 { font-size: 1.2rem; margin: 0 0 0.5rem; color: var(--accent); }
+        h3 { font-size: 1.2rem; margin: 1.4rem 0 0.65rem; color: var(--accent); }
+        h3:first-child { margin-top: 0; }
         p { margin-bottom: 0.9rem; color: #cbd5e1; }
         .card {
             background: var(--surface);
@@ -179,6 +180,22 @@
             border-radius: 14px;
             padding: 1.5rem;
             margin-bottom: 1.35rem;
+        }
+        .kw-item {
+            border-top: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+        .kw-item:first-of-type { border-top: none; padding-top: 0.25rem; }
+        .kw-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 0.75rem;
+            margin-bottom: 0.35rem;
+        }
+        .kw-alias {
+            font-size: 0.82rem;
+            color: var(--muted);
         }
         .alerta-defender {
             background: rgba(245, 158, 11, 0.08);
@@ -195,7 +212,7 @@
 
         .code-wrap {
             position: relative;
-            margin: 0.75rem 0 1rem;
+            margin: 0.55rem 0 0.25rem;
         }
         .copy-code-btn {
             position: absolute;
@@ -215,10 +232,10 @@
             background: #050811;
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1rem 1.1rem;
+            padding: 0.9rem 1.05rem;
             overflow-x: auto;
             font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: #e2e8f0;
             margin: 0;
         }
@@ -232,21 +249,17 @@
         }
         pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.25rem;
-        }
+        .table-wrap { overflow-x: auto; margin: 0.75rem 0 1rem; }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0.75rem 0;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
         }
         th, td {
-            padding: 0.7rem 0.85rem;
+            padding: 0.65rem 0.8rem;
             border-bottom: 1px solid var(--border);
             text-align: left;
+            vertical-align: top;
         }
         th { color: var(--accent); background: var(--surface-2); }
         td { color: #cbd5e1; }
@@ -267,11 +280,8 @@
         <a href="#" class="nav-brand">ESP 2.0.0</a>
         <ul class="nav-links">
             <li><a href="#instalacion">Instalación</a></li>
-            <li><a href="#cli">CLI y Compilación</a></li>
-            <li><a href="#fundamentos">Fundamentos</a></li>
-            <li><a href="#poo">Clases y Errores</a></li>
-            <li><a href="#sql">SQL Nativo</a></li>
-            <li><a href="#web">Web Nativa</a></li>
+            <li><a href="#cli">CLI</a></li>
+            <li><a href="#palabras-clave">Palabras Clave y Ejemplos</a></li>
             <li><a href="#modulos">Módulos</a></li>
         </ul>
     </div>
@@ -281,8 +291,8 @@
     <span class="badge">VERSIÓN ESTABLE 2.0.0 • COMPILADOR NATIVO AOT + WEB + SQL</span>
     <h1>Lenguaje de Programación ESP 2.0.0</h1>
     <p class="lead">
-        Escribe software de alto rendimiento, páginas web completas, bases de datos SQL,
-        herramientas de red/ciberseguridad, gráficos 2D/3D y tus propios lenguajes con sintaxis en español.
+        Documentación completa de cada palabra clave con su propósito y ejemplo práctico,
+        junto con el catálogo de módulos estándar y compilación nativa.
     </p>
     <div class="cta-group">
         <a href="https://github.com/rafa247/web_esp/releases/download/v2.0.0/esp.exe"
@@ -310,12 +320,12 @@
         <h2>1. Instalación y Registro Automático en el PATH</h2>
         <div class="card">
             <p>
-                El binario <strong>esp.exe</strong> (v2.0.0) incluye intérprete interactivo (REPL), compilador nativo AOT y toda la librería estándar en un solo ejecutable:
+                El binario <strong>esp.exe</strong> (v2.0.0) incluye intérprete interactivo (REPL), compilador nativo y módulos estándar en un solo ejecutable:
             </p>
             <ol>
                 <li>Descarga <code>esp.exe</code> desde el botón superior.</li>
                 <li>Guárdalo en una carpeta permanente, por ejemplo <code>C:\ESP\esp.exe</code>.</li>
-                <li>Al ejecutarlo por primera vez, verifica su ruta y se registra en el <code>PATH</code> de usuario para poder invocarse como <code>esp</code> desde cualquier directorio.</li>
+                <li>Al ejecutarlo por primera vez, verifica su ruta y se registra en el <code>PATH</code> de usuario para invocarse como <code>esp</code> desde cualquier carpeta.</li>
             </ol>
             <div class="code-wrap">
                 <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
@@ -343,226 +353,557 @@ Get-FileHash "$HOME\Downloads\esp.exe" -Algorithm SHA256</code></pre>
             <h3>Opción C: Restaurar o excluir en Seguridad de Windows</h3>
             <ol>
                 <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong> y restaura <code>esp.exe</code> si fue puesto en cuarentena.</li>
-                <li>Agrega tu carpeta de trabajo o de compilación (por ejemplo <code>C:\ESP</code>) en <strong>Exclusiones</strong> para evitar avisos al generar tus propios <code>.exe</code>.</li>
+                <li>Agrega tu carpeta de trabajo o compilación (por ejemplo <code>C:\ESP</code>) en <strong>Exclusiones</strong>.</li>
             </ol>
         </div>
     </section>
 
     <section id="cli">
-        <h2>2. CLI, Compilación Nativa y Subcomandos</h2>
+        <h2>2. Comandos CLI y Compilación</h2>
         <div class="card">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Comando</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>esp</code></td><td>Inicia la consola interactiva (REPL).</td></tr>
-                    <tr><td><code>esp archivo.esp</code></td><td>Ejecuta un script en ESP 2.0.0.</td></tr>
-                    <tr><td><code>esp compilar prog.esp -o prog.exe -O3</code></td><td>Compila a binario nativo (<code>exe</code>, <code>dll</code>, <code>so</code>, <code>dylib</code>, <code>estatica</code>, <code>ll</code>, <code>cpp</code>).</td></tr>
-                    <tr><td><code>esp verificar prog.esp</code></td><td>Valida la sintaxis sin ejecutar el programa.</td></tr>
-                    <tr><td><code>esp formatear prog.esp</code></td><td>Formatea e indenta automáticamente un archivo <code>.esp</code>.</td></tr>
-                    <tr><td><code>esp instalar paquete --sha256 &lt;hash&gt;</code></td><td>Descarga e instala un paquete verificando su firma SHA-256.</td></tr>
-                    <tr><td><code>esp nodo escuchar --puerto 9500</code></td><td>Levanta un nodo de red para ejecución remota en clúster.</td></tr>
-                    <tr><td><code>esp lsp</code></td><td>Inicia el servidor de lenguaje (LSP) por entrada/salida estándar.</td></tr>
-                </tbody>
-            </table>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Comando</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>esp</code></td><td>Inicia la consola interactiva (REPL).</td></tr>
+                        <tr><td><code>esp archivo.esp</code></td><td>Ejecuta un script en ESP 2.0.0.</td></tr>
+                        <tr><td><code>esp compilar prog.esp -o prog.exe -O3</code></td><td>Compila a binario nativo (<code>exe</code>, <code>dll</code>, <code>so</code>, <code>dylib</code>, <code>estatica</code>, <code>ll</code>, <code>cpp</code>).</td></tr>
+                        <tr><td><code>esp verificar prog.esp</code></td><td>Valida la sintaxis sin ejecutar el programa.</td></tr>
+                        <tr><td><code>esp formatear prog.esp</code></td><td>Formatea e indenta automáticamente un archivo <code>.esp</code>.</td></tr>
+                        <tr><td><code>esp instalar paquete --sha256 &lt;hash&gt;</code></td><td>Descarga e instala un paquete verificando su firma SHA-256.</td></tr>
+                        <tr><td><code>esp nodo escuchar --puerto 9500</code></td><td>Levanta un nodo de red para ejecución remota en clúster.</td></tr>
+                        <tr><td><code>esp lsp</code></td><td>Inicia el servidor de lenguaje (LSP) por entrada/salida estándar.</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 
-    <section id="fundamentos">
-        <h2>3. Fundamentos: Variables, Bucles y Funciones</h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3>Variables, Listas y Mapas</h3>
-                <p>Las listas en ESP admiten indexación base 1 (y 0 para el primer elemento), y los mapas almacenan pares clave-valor.</p>
+    <section id="palabras-clave">
+        <h2>3. Documentación y Ejemplos de Cada Palabra Clave</h2>
+
+        <div class="card">
+            <h3>A. Variables, Constantes y Literales</h3>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>variable</code> <span class="kw-alias">Alias: <code>var</code></span></div>
+                <p>Declara una variable mutable cuyo valor puede asignarse o modificarse durante la ejecución.</p>
                 <div class="code-wrap">
                     <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable nombre = "ESP 2.0.0"
-constante MAX_REINTENTOS = 3
-
-variable lenguajes = ["C++", "Rust", "ESP"]
-agregar(lenguajes, "SQL")
-
-variable ficha = {
-    proyecto: nombre,
-    version: 2,
-    activo: verdadero
-}
-
-mostrar(lenguajes[3])
-mostrar(ficha.proyecto)
-mostrar("Total: " + texto(longitud(lenguajes)))</code></pre>
+                    <pre><code>variable contador = 0
+contador = contador + 5
+mostrar(contador)</code></pre>
                 </div>
             </div>
 
-            <div class="card">
-                <h3>Condicionales, Bucles y Funciones</h3>
-                <p>Usa <code>si</code> / <code>si_no_si</code> / <code>sino</code>, rangos con <code>para i = 1 hasta 5 paso 1</code> o iteración con <code>para x en lista</code>.</p>
+            <div class="kw-item">
+                <div class="kw-header"><code>constante</code> <span class="kw-alias">Alias: <code>const</code></span></div>
+                <p>Declara un valor constante que debe inicializarse al definirse y no puede reasignarse.</p>
                 <div class="code-wrap">
                     <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>funcion sumar(a, b = 10)
-    devolver a + b
-fin
+                    <pre><code>constante VERSION_APP = "2.0.0"
+mostrar(VERSION_APP)</code></pre>
+                </div>
+            </div>
 
-para i = 1 hasta 5
-    si i % 2 == 0 y i &gt;= 2
-        mostrar(texto(i) + " -> " + texto(sumar(i)))
-    sino
-        mostrar(texto(i) + " -> impar")
-    fin
+            <div class="kw-item">
+                <div class="kw-header"><code>verdadero</code> y <code>falso</code> <span class="kw-alias">Alias: <code>true</code>, <code>false</code></span></div>
+                <p>Literales booleanos para representar valores lógicos de verdad o falsedad.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable activo = verdadero
+variable suspendido = falso
+mostrar(activo)
+mostrar(suspendido)</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>nulo</code> <span class="kw-alias">Alias: <code>null</code></span></div>
+                <p>Representa un valor vacío o inexistente.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable resultado = nulo
+si resultado == nulo
+    mostrar("Sin valor asignado")
 fin</code></pre>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section id="poo">
-        <h2>4. Clases, Herencia y Manejo de Errores</h2>
         <div class="card">
-            <p>Las clases soportan <code>hereda</code>, propiedades y métodos con visibilidad <code>publico</code> o <code>privado</code>, constructor <code>iniciar</code> y bloques <code>intenta</code> / <code>si_no_puede</code>.</p>
-            <div class="code-wrap">
-                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                <pre><code>clase Cuenta
-    publico variable titular = ""
-    privado variable saldo = 0
+            <h3>B. Funciones, Retorno, Cierre de Bloques y POO</h3>
 
-    publico funcion iniciar(titular, saldo_inicial)
-        este.titular = titular
-        este.saldo = saldo_inicial
-    fin
-
-    publico funcion depositar(monto)
-        si monto &lt;= 0
-            afirmar(falso, "El monto debe ser positivo")
-        fin
-        este.saldo = este.saldo + monto
-        devolver este.saldo
-    fin
+            <div class="kw-item">
+                <div class="kw-header"><code>funcion</code> <span class="kw-alias">Alias: <code>function</code>, <code>fn</code></span></div>
+                <p>Define una función reutilizable o un método de clase, con soporte para parámetros por defecto.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>funcion saludar(nombre = "mundo")
+    mostrar("Hola, " + nombre)
 fin
 
-clase CuentaVIP hereda Cuenta
-    publico funcion bono()
-        devolver este.depositar(50)
-    fin
+saludar("Rafa")
+saludar()</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>devolver</code> <span class="kw-alias">Alias: <code>return</code></span></div>
+                <p>Sale de la función actual y devuelve un valor al llamador.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>funcion doble(x)
+    devolver x * 2
 fin
 
-intenta
-    variable c = CuentaVIP("Rafa", 100)
-    mostrar("Saldo final: " + texto(c.bono()))
-si_no_puede err
-    mostrar("Error controlado: " + err)
+mostrar(doble(7))</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>fin</code> <span class="kw-alias">Alias: <code>end</code></span></div>
+                <p>Cierra cualquier bloque delimitado (<code>funcion</code>, <code>clase</code>, <code>si</code>, <code>mientras</code>, <code>para</code>, <code>intenta</code>, <code>pagina</code>, <code>estilo</code>, <code>script</code> y <code>contenedor</code>).</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>si verdadero
+    mostrar("Bloque cerrado con fin")
 fin</code></pre>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <section id="sql">
-        <h2>5. Base de Datos SQL Nativa</h2>
-        <div class="card">
-            <p>ESP 2.0.0 incluye sentencias nativas de base de datos en español (<code>base_datos</code>, <code>crear_tabla</code>, <code>insertar_en</code>, <code>seleccionar</code>, <code>actualizar</code>, <code>eliminar_de</code>) y persistencia en disco.</p>
-            <div class="code-wrap">
-                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                <pre><code>base_datos "tienda.db"
-crear_tabla productos(id, nombre, precio, stock)
-
-insertar_en productos(id, nombre, precio, stock) valores (1, "Teclado", 45, 12)
-insertar_en productos(id, nombre, precio, stock) valores (2, "Mouse", 25, 30)
-
-actualizar productos poner precio = 29 donde id = 2
-
-variable baratos = seleccionar nombre, precio de productos donde precio &lt;= 50 ordenar_por precio asc limite 5
-para item en baratos
-    mostrar(item.nombre + ": $" + item.precio)
+            <div class="kw-item">
+                <div class="kw-header"><code>clase</code> <span class="kw-alias">Alias: <code>class</code></span></div>
+                <p>Define un molde con propiedades y métodos para instanciar objetos.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>clase Usuario
+    publico variable nombre = ""
+    publico funcion iniciar(n)
+        este.nombre = n
+    fin
 fin
 
-eliminar_de productos donde id = 1</code></pre>
+variable u = Usuario("Ana")
+mostrar(u.nombre)</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>hereda</code> <span class="kw-alias">Alias: <code>extends</code>, <code>de</code></span></div>
+                <p>Permite que una clase herede propiedades y métodos de otra clase.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>clase Animal
+    publico funcion hablar()
+        devolver "Sonido"
+    fin
+fin
+
+clase Perro hereda Animal
+    publico funcion ladrar()
+        devolver "Guau"
+    fin
+fin
+
+variable p = Perro()
+mostrar(p.hablar())
+mostrar(p.ladrar())</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>este</code> <span class="kw-alias">Alias: <code>this</code></span></div>
+                <p>Accede a las propiedades o métodos de la instancia actual dentro de un método.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>clase Caja
+    publico variable valor = 0
+    publico funcion establecer(v)
+        este.valor = v
+    fin
+fin
+
+variable c = Caja()
+c.establecer(42)
+mostrar(c.valor)</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>super</code></div>
+                <p>Invoca o accede a miembros definidos en la clase padre desde una subclase.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>clase Padre
+    publico funcion iniciar()
+        mostrar("Padre iniciado")
+    fin
+fin
+
+clase Hijo hereda Padre
+    publico funcion iniciar()
+        super.iniciar()
+        mostrar("Hijo iniciado")
+    fin
+fin
+
+variable h = Hijo()
+h.iniciar()</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>publico</code> y <code>privado</code> <span class="kw-alias">Alias: <code>publica</code>, <code>public</code> / <code>privada</code>, <code>private</code></span></div>
+                <p>Modificadores de visibilidad para propiedades, métodos y declaraciones.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>clase Boveda
+    privado variable secreto = "1234"
+    publico funcion leer_clave()
+        devolver este.secreto
+    fin
+fin
+
+variable b = Boveda()
+mostrar(b.leer_clave())</code></pre>
+                </div>
             </div>
         </div>
-    </section>
 
-    <section id="web">
-        <h2>6. Desarrollo Web Nativo (HTML5 + CSS3 + JS)</h2>
         <div class="card">
-            <p>Declara páginas con <code>pagina</code>, estilos con <code>estilo</code>, elementos como <code>encabezado</code>, <code>parrafo</code>, <code>entrada</code>, <code>enlace</code>, <code>imagen</code>, <code>contenedor</code> y eventos <code>al_clic</code>, y expórtalos con <code>guardar_web</code> o <code>html_web()</code>.</p>
-            <div class="code-wrap">
-                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                <pre><code>pagina "Panel ESP 2.0.0"
+            <h3>C. Condicionales, Bucles, Lógicos, Módulos y Excepciones</h3>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>si</code>, <code>si_no_si</code> y <code>sino</code> <span class="kw-alias">Alias: <code>if</code>, <code>elseif</code>, <code>si_no</code>, <code>else</code></span></div>
+                <p>Evalúan condiciones y ejecutan la rama correspondiente según el resultado booleano.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable nota = 85
+si nota &gt;= 90
+    mostrar("Excelente")
+si_no_si nota &gt;= 70
+    mostrar("Aprobado")
+sino
+    mostrar("Reprobado")
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>mientras</code> <span class="kw-alias">Alias: <code>while</code></span></div>
+                <p>Repite un bloque de código mientras la condición siga siendo verdadera.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable n = 1
+mientras n &lt;= 3
+    mostrar(n)
+    n = n + 1
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>para</code>, <code>hasta</code>, <code>paso</code> y <code>en</code> <span class="kw-alias">Alias: <code>for</code>, <code>to</code>, <code>step</code>, <code>in</code></span></div>
+                <p>Crea bucles numéricos con <code>hasta</code> (y <code>paso</code> opcional) o recorre elementos con <code>en</code>.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>para i = 0 hasta 6 paso 2
+    mostrar(i)
+fin
+
+para fruta en ["manzana", "pera"]
+    mostrar(fruta)
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>romper</code> y <code>continuar</code> <span class="kw-alias">Alias: <code>break</code>, <code>continue</code></span></div>
+                <p><code>romper</code> detiene el bucle actual; <code>continuar</code> pasa directamente a la siguiente iteración.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>para i = 1 hasta 5
+    si i == 2
+        continuar
+    fin
+    si i == 4
+        romper
+    fin
+    mostrar(i)
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>y</code>, <code>o</code> y <code>no</code> <span class="kw-alias">Alias: <code>and</code>, <code>or</code>, <code>not</code></span></div>
+                <p>Operadores lógicos para combinar o negar expresiones booleanas.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable x = 5
+si (x &gt; 0 y x &lt; 10) o no falso
+    mostrar("Condición lógica verdadera")
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>conseguir</code>, <code>como</code> y <code>exportar</code> <span class="kw-alias">Alias: <code>importar</code>, <code>as</code>, <code>export</code></span></div>
+                <p><code>conseguir</code> importa módulos o archivos, <code>como</code> define un alias y <code>exportar</code> expone un símbolo.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>conseguir matematicas como mat
+mostrar(mat.raiz(16))
+
+funcion helper()
+    devolver "ok"
+fin
+exportar helper</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>intenta</code> y <code>si_no_puede</code> <span class="kw-alias">Alias: <code>try</code>, <code>catch</code></span></div>
+                <p>Captura errores en tiempo de ejecución sin detener abruptamente el programa.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>intenta
+    mostrar(10 / 0)
+si_no_puede error
+    mostrar("Capturado: " + error)
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>datos</code> y <code>lista</code></div>
+                <p>Palabras clave reservadas por el analizador léxico del lenguaje.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable elementos = [1, 2, 3]
+mostrar(elementos)</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>D. Palabras Clave de SQL Nativo en Español</h3>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>base_datos</code></div>
+                <p>Abre o crea una base de datos SQL para las siguientes sentencias nativas.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>base_datos "sistema.db"</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>crear_tabla</code></div>
+                <p>Crea una nueva tabla con la lista de columnas indicada.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>base_datos "sistema.db"
+crear_tabla clientes(id, nombre, ciudad)</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>insertar_en</code> y <code>valores</code></div>
+                <p>Inserta una fila en una tabla especificando columnas y sus valores correspondientes.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>base_datos "sistema.db"
+crear_tabla clientes(id, nombre, ciudad)
+insertar_en clientes(id, nombre, ciudad) valores (1, "Lucía", "Monterrey")</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>seleccionar</code>, <code>de</code>, <code>donde</code>, <code>ordenar_por</code> y <code>limite</code></div>
+                <p>Consulta registros desde una tabla, filtra con <code>donde</code>, ordena con <code>ordenar_por</code> y acota con <code>limite</code>.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>base_datos "sistema.db"
+variable top = seleccionar nombre de clientes donde ciudad == "Monterrey" ordenar_por id desc limite 1
+mostrar(top)</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>actualizar</code> y <code>poner</code></div>
+                <p>Modifica columnas de las filas que cumplan la condición indicada.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>base_datos "sistema.db"
+actualizar clientes poner ciudad = "Guadalajara" donde id == 1</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>eliminar_de</code></div>
+                <p>Elimina filas de una tabla (con filtro opcional <code>donde</code>).</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>base_datos "sistema.db"
+eliminar_de clientes donde id == 1</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>E. Palabras Clave de Web Nativa en Español</h3>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>pagina</code></div>
+                <p>Declara un documento web con su título y contenido hasta <code>fin</code>.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Portal ESP"
+    encabezado "Bienvenido"
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>estilo</code></div>
+                <p>Define reglas de estilo para un selector dentro de una página.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Estilos"
     estilo body
-        fondo = "#0b1020"
-        color_texto = "#edf2ff"
+        fondo = "#080c17"
+        color_texto = "#f1f5f9"
     fin
+fin</code></pre>
+                </div>
+            </div>
 
-    contenedor "tarjeta"
-        encabezado "Hola desde ESP Web"
-        parrafo "Generado directamente en Español sin plantillas externas."
-        entrada "correo"
-        boton "Saludar" al_clic
-            alerta("¡Botón ejecutado!")
-        fin
-    fin
-
+            <div class="kw-item">
+                <div class="kw-header"><code>script</code></div>
+                <p>Añade un bloque de lógica transpilada a JavaScript dentro de la página.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Con Script"
     script
-        consola("Página lista en el navegador")
+        consola("Cargado desde ESP")
     fin
-fin
+fin</code></pre>
+                </div>
+            </div>
 
-guardar_web("salida.html")
-mostrar("HTML generado con éxito")</code></pre>
+            <div class="kw-item">
+                <div class="kw-header"><code>encabezado</code>, <code>subtitulo</code> y <code>parrafo</code></div>
+                <p>Insertan títulos principales, subtítulos y párrafos de texto en la página.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Textos"
+    encabezado "Título"
+    subtitulo "Subtítulo"
+    parrafo "Cuerpo del mensaje"
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>entrada</code>, <code>enlace</code> y <code>imagen</code></div>
+                <p>Crean campos de entrada, hipervínculos e imágenes dentro de la página.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Elementos"
+    entrada "tu_correo"
+    enlace "Repositorio", "https://github.com/rafa247/web_esp"
+    imagen "banner.png", "Banner"
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>boton</code> y <code>al_clic</code></div>
+                <p>Agregan un botón interactivo y definen qué ocurre al pulsarlo con <code>al_clic</code>.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Interactiva"
+    boton "Pulsar aquí" al_clic
+        alerta("¡Botón pulsado!")
+    fin
+fin</code></pre>
+                </div>
+            </div>
+
+            <div class="kw-item">
+                <div class="kw-header"><code>contenedor</code></div>
+                <p>Agrupa elementos y sub bloques dentro de un contenedor.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>pagina "Contenedor"
+    contenedor "tarjeta"
+        encabezado "Dentro de tarjeta"
+        parrafo "Contenido agrupado"
+    fin
+fin</code></pre>
+                </div>
             </div>
         </div>
     </section>
 
     <section id="modulos">
-        <h2>7. Módulos Estándar con <code>conseguir</code></h2>
-        <div class="grid-2">
-            <div class="card">
-                <h3><code>re</code> y <code>cripto</code></h3>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>conseguir re
-conseguir cripto
-
-variable m = re.buscar("[0-9]+", "Puerto: 8080")
-mostrar(m.texto)
-
-variable hash = cripto.sha256("clave-secreta")
-mostrar(hash)
-mostrar(cripto.uuid_v4())</code></pre>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3><code>redes.ip</code>, <code>binario</code> y <code>lenguajes</code></h3>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>conseguir redes.ip
-conseguir binario
-conseguir lenguajes
-
-variable red = redes.ip.red("192.168.1.0/24")
-mostrar("Broadcast: " + red.broadcast)
-
-variable pack = binario.empaquetar("&gt;BH", 1, 8080)
-mostrar(binario.a_hex(pack))
-
-variable mini = lenguajes.crear("Mini")
-lenguajes.mostrar.nombre(mini, "decir")
-lenguajes.ejecutar(mini, 'decir("Hola desde Mini")')</code></pre>
-                </div>
-            </div>
-        </div>
+        <h2>4. Palabras y Funciones de Cada Módulo</h2>
 
         <div class="card">
-            <h3>Otros Módulos Disponibles</h3>
+            <h3>Sistema, Archivos y Rutas</h3>
             <ul>
-                <li><code>archivos</code>, <code>rutas</code> y <code>os</code> — Lectura/escritura de archivos, rutas, variables de entorno, procesos y memoria virtual.</li>
-                <li><code>redes.sockets</code>, <code>redes.http</code>, <code>redes.dns</code>, <code>servidor</code> y <code>websockets</code> — Sockets TCP/UDP, peticiones HTTP, resolución DNS, servidor HTTP y WebSockets RFC 6455.</li>
-                <li><code>matematicas</code>, <code>aleatorio</code>, <code>estadistica</code>, <code>tensores</code> y <code>hilos</code> — Funciones matemáticas, números aleatorios, multiplicación de matrices y ejecución paralela.</li>
-                <li><code>json</code>, <code>csv</code> y <code>base64</code> — Serialización/deserialización JSON, manejo de CSV y codificación Base64.</li>
-                <li><code>motor2d</code>, <code>motor3d</code>, <code>gui</code>, <code>audio</code>, <code>forense</code> y <code>ast</code> — Renderizado 2D/3D por software, controles Win32 GUI, audio, análisis de binarios e introspección del AST.</li>
+                <li><code>archivos</code>: <code>leer(ruta)</code>, <code>escribir(ruta, texto)</code>, <code>anexar(ruta, texto)</code>, <code>existe(ruta)</code>, <code>eliminar(ruta)</code>, <code>crear_directorio(ruta)</code>, <code>listar(dir?)</code>.</li>
+                <li><code>rutas</code>: <code>unir(p1, p2, ...)</code>, <code>absoluta(ruta)</code>, <code>padre(ruta)</code>, <code>nombre(ruta)</code>, <code>extension(ruta)</code>, <code>tamano(ruta)</code>, <code>recorrer(dir?)</code>.</li>
+                <li><code>sistema</code> / <code>sistema.os</code>: <code>nombre()</code>, <code>variable(nombre)</code>, <code>prioridad(alta|normal|baja)</code>.</li>
+                <li><code>sistema.procesos</code> / <code>subprocess</code>: <code>ejecutar(comando, timeout_ms?)</code> (devuelve <code>codigo</code>, <code>salida</code>, <code>error</code>).</li>
+                <li><code>hardware</code>: <code>nucleos()</code>, <code>arquitectura()</code>, <code>memoria_total_mb()</code>, <code>memoria_libre_mb()</code>.</li>
+                <li><code>os</code> / <code>kernel</code>: <code>nombre()</code>, <code>pid()</code>, <code>directorio_actual()</code>, <code>cambiar_directorio(ruta)</code>, <code>variable(nombre)</code>, <code>establecer_variable(clave, valor)</code>, <code>listar(dir?)</code>, <code>recorrer(dir?)</code>, <code>unir_ruta(...)</code>, <code>existe(ruta)</code>, <code>crear_directorio(ruta)</code>, <code>eliminar(ruta)</code>, <code>copiar(orig, dest)</code>, <code>mover(orig, dest)</code>, <code>ejecutar(comando, timeout_ms?)</code>, <code>asignar_memoria(tam)</code>, <code>escribir_byte(id, dir, val)</code>, <code>leer_byte(id, dir)</code>, <code>liberar_memoria(id)</code>, <code>generar_boot_sector(ruta, msg)</code>, <code>generar_kernel_32(ruta, msg)</code>.</li>
+            </ul>
+
+            <h3>Redes, HTTP, Web y Tiempo Real</h3>
+            <ul>
+                <li><code>redes.http</code> / <code>web.http</code> / <code>http</code> / <code>requests</code>: <code>obtener(url, cabeceras?)</code>, <code>peticion(metodo, url, cuerpo?, cabeceras?)</code>, <code>enviar_post(url, cuerpo, cabeceras?)</code>, <code>descargar(url, ruta_destino)</code>.</li>
+                <li><code>redes.dns</code> / <code>dns</code>: <code>resolver(dominio)</code>.</li>
+                <li><code>redes.ip</code>: <code>local()</code>, <code>direccion(ip)</code>, <code>red(cidr, estricto?)</code>, <code>hosts(cidr, limite?)</code>, <code>subredes(cidr, nuevo_prefijo)</code>, <code>superred(cidr, nuevo_prefijo)</code>, <code>se_solapan(cidr1, cidr2)</code>, <code>contiene(cidr, ip_o_subred)</code>, <code>puntero_inverso(dir)</code>, <code>validar(dir)</code>, <code>a_entero(ipv4)</code>, <code>desde_entero(num)</code>, <code>latencia_tcp(ip, puerto, timeout_ms?)</code>, <code>enrutar_mas_rapida(lista_ips, puerto, timeout_ms?)</code>, <code>escanear_red(cidr, puerto, timeout_ms?)</code>.</li>
+                <li><code>redes.sockets</code> / <code>sockets</code>: <code>tcp_conectar(host, puerto, timeout_ms?)</code>, <code>enviar(id, datos)</code>, <code>recibir(id, max_bytes?)</code>, <code>cerrar(id)</code>, <code>udp_enviar(host, puerto, texto)</code>, <code>tcp_enviar(host, puerto, texto)</code>.</li>
+                <li><code>websockets</code> / <code>ws</code>: <code>escuchar_uno(puerto?)</code>, <code>enviar(id, msg)</code>, <code>recibir(id)</code>, <code>cerrar(id)</code>.</li>
+                <li><code>web</code> y <code>servidor</code>: <code>web.pagina(titulo, html, css?, js?)</code>, <code>web.tarjeta(titulo, desc, texto_boton?, enlace?)</code>, <code>web.tabla(cols, filas)</code>, <code>web.formulario(accion, metodo, campos, texto_enviar?)</code>, <code>web.servidor(puerto, rutas, max_peticiones?)</code> y <code>servidor.http(puerto?, cuerpo_o_rutas?, max_peticiones?)</code>.</li>
+            </ul>
+
+            <h3>Datos, SQL, Formatos y Binarios</h3>
+            <ul>
+                <li><code>datos.sql</code> / <code>sql</code>: <code>abrir(ruta?)</code>, <code>consultar(ruta, sql, params?)</code>, <code>conectar_externo(motor)</code>.</li>
+                <li><code>json</code>: <code>parsear(texto)</code> (<code>analizar</code>, <code>deserializar</code>) y <code>texto(valor)</code> (<code>serializar</code>, <code>codificar</code>).</li>
+                <li><code>csv</code>: <code>parsear(texto, delim?)</code>, <code>texto(filas, delim?)</code>.</li>
+                <li><code>base64</code>: <code>codificar(texto)</code>, <code>decodificar(texto_b64)</code>.</li>
+                <li><code>binario</code> / <code>struct</code>: <code>empaquetar(fmt, vals...)</code>, <code>desempaquetar(fmt, datos)</code>, <code>xor_bytes(datos, clave)</code>, <code>a_hex(datos)</code>, <code>de_hex(hex)</code>, <code>leer_archivo_bytes(ruta)</code>, <code>escribir_archivo_bytes(ruta, bytes)</code>, <code>entropia_shannon(datos)</code>.</li>
+            </ul>
+
+            <h3>Matemáticas, Concurrencia y Tiempo</h3>
+            <ul>
+                <li><code>matematicas</code>: <code>PI</code>, <code>E</code>, <code>raiz(x)</code>, <code>abs(x)</code>, <code>seno(x)</code>, <code>coseno(x)</code>, <code>log(x)</code>, <code>redondear(x)</code>, <code>min(a, b)</code>, <code>max(a, b)</code>.</li>
+                <li><code>aleatorio</code>: <code>semilla(num)</code>, <code>entero(min, max)</code>, <code>decimal()</code>, <code>elegir(lista)</code>, <code>mezclar(lista)</code>.</li>
+                <li><code>estadistica</code>: <code>media(lista)</code>.</li>
+                <li><code>tensores</code>: <code>producto_punto(v1, v2)</code>, <code>multiplicar(mat_a, mat_b)</code>.</li>
+                <li><code>hilos</code>: <code>ejecutar_paralelo(lista_codigos_esp)</code>.</li>
+                <li><code>tiempo</code>: <code>ahora_ms()</code>, <code>ahora_us()</code>, <code>esperar(ms)</code>.</li>
+            </ul>
+
+            <h3>Seguridad, Análisis, Gráficos y Lenguajes</h3>
+            <ul>
+                <li><code>cripto</code> / <code>seguridad</code>: <code>sha256(texto)</code>, <code>hmac_sha256(clave, msg)</code>, <code>token_seguro(nbytes?)</code>, <code>uuid_v4()</code>, <code>hex_codificar(txt)</code>, <code>hex_decodificar(hex)</code>, <code>aes_cifrar(clave, plano)</code>, <code>aes_descifrar(clave, hex)</code>.</li>
+                <li><code>re</code> / <code>regex</code>: <code>coincide(pat, txt, flags?)</code>, <code>coincide_inicio(pat, txt, flags?)</code>, <code>buscar(pat, txt, flags?)</code>, <code>encontrar_todos(pat, txt, flags?)</code>, <code>reemplazar(pat, rep, txt, flags?)</code>, <code>dividir(pat, txt, flags?)</code>, <code>escapar(txt)</code>.</li>
+                <li><code>forense</code>: <code>analizar_ejecutable(ruta)</code>, <code>extraer_strings(ruta, min_len?)</code>, <code>escanear_puertos(ip, puertos, timeout_ms?)</code>.</li>
+                <li><code>ast</code>: <code>tokens(codigo_esp)</code>, <code>analizar(codigo_esp)</code>.</li>
+                <li><code>motor2d</code> / <code>motor3d</code> / <code>graficos</code>: <code>iniciar(w?, h?, titulo?)</code>, <code>cerrar()</code>, <code>activa()</code>, <code>presentar()</code>, <code>delta_tiempo()</code>, <code>limpiar(col?)</code>, <code>tecla(vk)</code>, <code>raton()</code>, <code>color_rgb(r, g, b, a?)</code>, <code>cargar_imagen(ruta)</code>, <code>info_imagen(id)</code>, <code>dibujar_imagen(id, x, y, w?, h?)</code>, <code>dibujar_sprite(id, sx, sy, sw, sh, dx, dy, dw?, dh?)</code>, <code>pixel(x, y, col)</code>, <code>rectangulo(x, y, w, h, col)</code>, <code>circulo(cx, cy, r, col)</code>, <code>linea(x0, y0, x1, y1, col)</code>, <code>texto(x, y, cad, col?, esc?)</code>, <code>colisiona(x1, y1, w1, h1, x2, y2, w2, h2)</code>, <code>crear_cubo(...)</code>, <code>crear_piramide(...)</code>, <code>crear_plano(...)</code>, <code>cargar_obj(ruta, col?)</code>, <code>aplicar_textura(obj_id, img_id)</code>, <code>transformar(id, x, y, z, rx, ry, rz)</code>, <code>escalar(id, sx, sy, sz)</code>, <code>camara(x, y, z, rx?, ry?, rz?)</code>, <code>luz(x, y, z, int)</code>, <code>niebla(activa, dist, col)</code>, <code>lanzar_rayo(ox, oy, oz, dx, dy, dz)</code>, <code>renderizar_3d()</code>.</li>
+                <li><code>gui</code>: <code>ventana(titulo?, w?, h?)</code>, <code>boton(...)</code>, <code>etiqueta(...)</code>, <code>campo_texto(...)</code>, <code>leer_texto(id)</code>, <code>establecer_texto(id, txt)</code>, <code>ejecutar()</code>.</li>
+                <li><code>audio</code>: <code>reproducir(ruta_wav, bucle?)</code>, <code>detener()</code>, <code>tono(hz, ms)</code>.</li>
+                <li><code>nativo</code> / <code>ffi</code> / <code>ctypes</code>: <code>abrir(ruta_dll_o_so)</code>, <code>llamar_entero(lib_id, fn, arg1?, arg2?)</code>, <code>cerrar(lib_id)</code>.</li>
+                <li><code>lenguajes</code>: <code>crear(nombre)</code>, <code>bloque(lang, abrir, cerrar)</code>, <code>&lt;constructo&gt;.nombre(lang, alias)</code>, <code>transpilar(lang, cod)</code>, <code>ejecutar(lang, cod)</code>, <code>compilar(lang, cod, salida, fmt?)</code>, <code>empaquetar_lenguaje(lang, ruta_exe)</code>.</li>
+                <li><code>compilacion</code> y <code>pruebas</code>: <code>compilacion.compilador()</code> y <code>pruebas.afirmar(cond, msg?)</code>.</li>
             </ul>
         </div>
     </section>
