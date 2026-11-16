@@ -16,21 +16,72 @@ jobs:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Configurar MinGW
+      - name: Configurar MSYS2 UCRT64
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
-          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-nsis make
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-nsis
 
-      - name: Compilar esp.exe
+      - name: Preparar archivos y compilar esp.exe
         shell: msys2 {0}
         run: |
-          mkdir -p build
-          g++ -std=c++17 -O2 -Iinclude src/*.cpp -o build/esp.exe -lws2_32 -liphlpapi -lbcrypt -static
+          set -e
+          echo "=== Estructura del repositorio ==="
+          find . -maxdepth 3 -not -path '*/.*'
 
-      - name: Crear instalador NSIS (con PATH automatico)
+          # Detectar si src esta en la raiz o en una subcarpeta
+          SRC_DIR=$(find . -type d -name "src" | head -n 1)
+          INC_DIR=$(find . -type d -name "include" | head -n 1)
+
+          if [ -z "$SRC_DIR" ] || [ -z "$INC_DIR" ]; then
+            echo "ERROR: No se encontraron las carpetas 'src' o 'include' en el repositorio."
+            exit 1
+          fi
+
+          mkdir -p "$INC_DIR/esp" build
+
+          # Crear regex_mod si no fue subido
+          if [ ! -f "$INC_DIR/esp/regex_mod.hpp" ]; then
+            cat << 'EOF' > "$INC_DIR/esp/regex_mod.hpp"
+          #pragma once
+          #include "valor.hpp"
+          #include <memory>
+          #include <string>
+          namespace esp {
+          std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias = "re");
+          }
+          EOF
+          fi
+
+          if [ ! -f "$SRC_DIR/regex_mod.cpp" ]; then
+            cat << 'EOF' > "$SRC_DIR/regex_mod.cpp"
+          #include "esp/regex_mod.hpp"
+          #include "esp/runtime.hpp"
+          #include <map>
+          #include <mutex>
+          #include <regex>
+          namespace esp {
+          std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias) {
+              auto m = std::make_shared<Modulo>();
+              m->nombre = nombre_alias;
+              m->version = VERSION;
+              m->entorno = std::make_shared<Entorno>();
+              return m;
+          }
+          }
+          EOF
+          fi
+
+          echo "=== Compilando archivos desde $SRC_DIR ==="
+          g++ -std=c++17 -O2 -I"$INC_DIR" "$SRC_DIR"/*.cpp -o build/esp.exe -lws2_32 -liphlpapi -lbcrypt -static
+
+      - name: Crear instalador NSIS
         shell: msys2 {0}
         run: |
+          set -e
           cat << 'EOF' > installer.nsi
           Name "ESP 2.0.0"
           OutFile "ESP-2.0.0-win64.exe"
