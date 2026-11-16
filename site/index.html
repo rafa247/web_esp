@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP 2.0.0 — Documentación Completa de Palabras Clave y Ejemplos</title>
+    <title>ESP 2.1.0 — Documentación Oficial, Palabras Clave, Módulos y rf OS</title>
     <style>
         :root {
             --bg: #080c17;
@@ -17,55 +17,16 @@
             --border: #263248;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
         body {
             background: var(--bg);
             color: var(--text);
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.65;
         }
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(8, 12, 23, 0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 0.75rem 1.5rem;
-        }
-        .nav-inner {
-            max-width: 1140px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem 1.25rem;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .nav-brand {
-            font-weight: 800;
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 1rem;
-        }
-        .nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem 1rem;
-            list-style: none;
-            font-size: 0.88rem;
-        }
-        .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .nav-links a:hover { color: var(--text); }
-
         header {
             background: radial-gradient(circle at top, #132347 0%, var(--bg) 70%);
             border-bottom: 1px solid var(--border);
-            padding: 4rem 1.5rem 3.25rem;
+            padding: 4.5rem 1.5rem 3.5rem;
             text-align: center;
         }
         .badge {
@@ -80,16 +41,16 @@
             margin-bottom: 1rem;
         }
         h1 {
-            font-size: clamp(2.1rem, 5vw, 3.4rem);
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             margin-bottom: 1rem;
         }
         .lead {
-            max-width: 740px;
+            max-width: 760px;
             margin: 0 auto 2rem;
             color: var(--muted);
-            font-size: 1.12rem;
+            font-size: 1.15rem;
         }
         .cta-group {
             display: flex;
@@ -105,8 +66,8 @@
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
             color: #04101d;
             font-weight: 800;
-            font-size: 1.05rem;
-            padding: 0.95rem 1.85rem;
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
             border-radius: 12px;
             text-decoration: none;
             box-shadow: 0 10px 30px rgba(45, 212, 191, 0.25);
@@ -124,16 +85,16 @@
             color: var(--text);
             border: 1px solid var(--border);
             font-weight: 600;
-            padding: 0.95rem 1.4rem;
+            padding: 1rem 1.5rem;
             border-radius: 12px;
             text-decoration: none;
         }
         .btn-secundario:hover { border-color: var(--accent); }
         .sha-box {
-            max-width: 700px;
+            max-width: 720px;
             margin: 1.35rem auto 0;
             padding: 0.75rem 1rem;
-            background: rgba(17, 24, 39, 0.88);
+            background: rgba(17, 24, 39, 0.85);
             border: 1px solid var(--border);
             border-radius: 10px;
             font-family: Consolas, monospace;
@@ -152,50 +113,51 @@
             color: var(--accent-2);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 0.22rem 0.65rem;
+            padding: 0.2rem 0.6rem;
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
         }
         .btn-copiar:hover { border-color: var(--accent-2); }
-
+        nav.toc {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0.85rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        nav.toc a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        nav.toc a:hover { color: var(--accent); }
         main {
             max-width: 1080px;
             margin: 0 auto;
             padding: 3rem 1.5rem 5rem;
         }
-        section { margin-bottom: 3.75rem; scroll-margin-top: 4.2rem; }
+        section { margin-bottom: 3.5rem; }
         h2 {
             font-size: 1.75rem;
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.5rem;
         }
-        h3 { font-size: 1.2rem; margin: 1.4rem 0 0.65rem; color: var(--accent); }
-        h3:first-child { margin-top: 0; }
-        p { margin-bottom: 0.9rem; color: #cbd5e1; }
+        h3 { font-size: 1.2rem; margin: 1.2rem 0 0.5rem; color: var(--accent); }
+        p { margin-bottom: 1rem; color: #cbd5e1; }
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 1.5rem;
-            margin-bottom: 1.35rem;
-        }
-        .kw-item {
-            border-top: 1px solid var(--border);
-            padding: 1rem 0;
-        }
-        .kw-item:first-of-type { border-top: none; padding-top: 0.25rem; }
-        .kw-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            gap: 0.5rem 0.75rem;
-            margin-bottom: 0.35rem;
-        }
-        .kw-alias {
-            font-size: 0.82rem;
-            color: var(--muted);
+            margin-bottom: 1.25rem;
         }
         .alerta-defender {
             background: rgba(245, 158, 11, 0.08);
@@ -205,39 +167,19 @@
             padding: 1.5rem;
             margin: 1.5rem 0;
         }
-        .alerta-defender h3 { color: var(--warn); margin: 1rem 0 0.4rem; }
-        .alerta-defender h3:first-child { margin-top: 0; }
+        .alerta-defender h3 { color: var(--warn); margin-top: 0; }
         ol, ul { margin-left: 1.4rem; margin-bottom: 1rem; color: #cbd5e1; }
-        li { margin-bottom: 0.45rem; }
-
-        .code-wrap {
-            position: relative;
-            margin: 0.55rem 0 0.25rem;
-        }
-        .copy-code-btn {
-            position: absolute;
-            top: 0.55rem;
-            right: 0.55rem;
-            background: var(--surface-2);
-            color: var(--accent-2);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.25rem 0.6rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .copy-code-btn:hover { border-color: var(--accent-2); }
+        li { margin-bottom: 0.5rem; }
         pre {
             background: #050811;
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 0.9rem 1.05rem;
+            padding: 1.1rem;
             overflow-x: auto;
             font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             color: #e2e8f0;
-            margin: 0;
+            margin: 0.75rem 0 1.15rem;
         }
         code {
             background: var(--surface-2);
@@ -245,25 +187,13 @@
             border-radius: 5px;
             font-family: Consolas, monospace;
             color: var(--accent-2);
-            font-size: 0.9em;
         }
-        pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
-
-        .table-wrap { overflow-x: auto; margin: 0.75rem 0 1rem; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
+        pre code { background: transparent; padding: 0; color: inherit; }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
         }
-        th, td {
-            padding: 0.65rem 0.8rem;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-            vertical-align: top;
-        }
-        th { color: var(--accent); background: var(--surface-2); }
-        td { color: #cbd5e1; }
-
         footer {
             text-align: center;
             padding: 2rem;
@@ -275,30 +205,18 @@
 </head>
 <body>
 
-<nav>
-    <div class="nav-inner">
-        <a href="#" class="nav-brand">ESP 2.0.0</a>
-        <ul class="nav-links">
-            <li><a href="#instalacion">Instalación</a></li>
-            <li><a href="#cli">CLI</a></li>
-            <li><a href="#palabras-clave">Palabras Clave y Ejemplos</a></li>
-            <li><a href="#modulos">Módulos</a></li>
-        </ul>
-    </div>
-</nav>
-
 <header>
-    <span class="badge">VERSIÓN ESTABLE 2.0.0 • COMPILADOR NATIVO AOT + WEB + SQL</span>
-    <h1>Lenguaje de Programación ESP 2.0.0</h1>
+    <span class="badge">VERSIÓN ESTABLE 2.1.0 • COMPILADOR NATIVO AOT + ISO EL TORITO + WEB + SQL</span>
+    <h1>Lenguaje de Programación ESP 2.1.0</h1>
     <p class="lead">
-        Documentación completa de cada palabra clave con su propósito y ejemplo práctico,
-        junto con el catálogo de módulos estándar y compilación nativa.
+        Escribe software de alto rendimiento, páginas web completas, bases de datos SQL,
+        herramientas de ciberseguridad, kernels x86 y el sistema operativo rf OS con sintaxis 100% nativa en español.
     </p>
     <div class="cta-group">
         <a href="https://github.com/rafa247/web_esp/releases/download/v2.0.0/esp.exe"
            class="btn-descarga"
            download="esp.exe">
-            ⬇ Descargar ESP v2.0.0 (Windows 64-bit)
+            ⬇ Descargar ESP v2.1.0 (Windows 64-bit)
         </a>
         <a href="#guia-defender" class="btn-secundario">
             🛡 ¿Windows Defender lo bloquea? Ver guía
@@ -306,7 +224,7 @@
     </div>
     <div class="sha-box">
         <strong>SHA-256:</strong>
-        <span id="sha256-esp">7e308f5a978232387e29fbaeddece10da6be4dd67833db842e44a10a4902ae3c</span>
+        <span id="sha256-esp">ac317c840ccf0561467f609e829751627e1b2e233b553ea705b8159bb954132a</span>
         <button type="button"
                 class="btn-copiar"
                 onclick="navigator.clipboard.writeText(document.getElementById('sha256-esp').innerText); this.innerText='¡Copiado!'; setTimeout(()=>this.innerText='Copiar', 1500);">
@@ -315,614 +233,699 @@
     </div>
 </header>
 
+<nav class="toc">
+    <a href="#instalacion">1. Instalación y Defender</a>
+    <a href="#primeros-pasos">2. Primeros Pasos</a>
+    <a href="#palabras-clave">3. Todas las Palabras Clave</a>
+    <a href="#modulos">4. Todos los Módulos</a>
+    <a href="#rf-os">5. rf OS e ISO Booteable</a>
+</nav>
+
 <main>
     <section id="instalacion">
-        <h2>1. Instalación y Registro Automático en el PATH</h2>
+        <h2>1. Instalación Rápida y Registro Automático en el PATH</h2>
         <div class="card">
             <p>
-                El binario <strong>esp.exe</strong> (v2.0.0) incluye intérprete interactivo (REPL), compilador nativo y módulos estándar en un solo ejecutable:
+                El binario oficial <strong>esp.exe</strong> (v2.1.0) incluye el intérprete, compilador nativo, generador de ISOs booteables y todos los módulos listos para usarse sin dependencias externas:
             </p>
             <ol>
-                <li>Descarga <code>esp.exe</code> desde el botón superior.</li>
-                <li>Guárdalo en una carpeta permanente, por ejemplo <code>C:\ESP\esp.exe</code>.</li>
-                <li>Al ejecutarlo por primera vez, verifica su ruta y se registra en el <code>PATH</code> de usuario para invocarse como <code>esp</code> desde cualquier carpeta.</li>
+                <li>Descarga el ejecutable haciendo clic en el botón superior <strong>Descargar ESP v2.1.0 (Windows 64-bit)</strong>.</li>
+                <li>Mueve <code>esp.exe</code> a una carpeta permanente (por ejemplo, <code>C:\ESP\esp.exe</code> o <code>C:\Program Files\ESP\esp.exe</code>).</li>
+                <li>La primera vez que ejecutas <code>esp.exe</code>, el propio binario verifica su ubicación física y se auto-registra en el <code>PATH</code> de tu usuario para que puedas ejecutar <code>esp archivo.esp</code> desde cualquier carpeta.</li>
             </ol>
-            <div class="code-wrap">
-                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                <pre><code>esp version
+            <p>Abre una terminal nueva (PowerShell o CMD) y comprueba la instalación (y su hash SHA-256 si deseas verificar integridad):</p>
+            <pre><code>esp version
 esp ruta
 Get-FileHash "$HOME\Downloads\esp.exe" -Algorithm SHA256</code></pre>
-            </div>
         </div>
 
         <div class="alerta-defender" id="guia-defender">
             <h3>🛡 ¿Qué hacer si Windows Defender o SmartScreen bloquea el ejecutable?</h3>
             <p>
-                Como <strong>ESP 2.0.0</strong> es un proyecto independiente sin certificado comercial de pago de Microsoft, SmartScreen o Windows Defender pueden mostrar una advertencia inicial.
+                Como <strong>ESP 2.1.0</strong> es un proyecto independiente recién compilado y no cuenta con un certificado comercial de pago de Microsoft, <strong>Windows Defender SmartScreen</strong> puede mostrar una pantalla azul con el mensaje <em>"Windows protegió su PC"</em> o bloquear la descarga en el navegador.
             </p>
-            <h3>Opción A: Permitir en Windows SmartScreen</h3>
+
+            <h3>Opción A: Permitir desde la ventana de Windows SmartScreen (Recomendado)</h3>
             <ol>
-                <li>En la ventana <strong>"Windows protegió su PC"</strong>, haz clic en <strong>Más información</strong>.</li>
-                <li>Pulsa <strong>Ejecutar de todas formas</strong> para abrir <code>esp.exe</code>.</li>
+                <li>Cuando aparezca la ventana azul <strong>"Windows protegió su PC"</strong>, haz clic en el enlace subrayado <strong><u>Más información</u></strong> (situado debajo del texto de advertencia).</li>
+                <li>Aparecerá el botón <strong>Ejecutar de todas formas</strong> en la parte inferior derecha. Haz clic en él para iniciar <code>esp.exe</code> normalmente.</li>
             </ol>
-            <h3>Opción B: Desbloquear desde PowerShell o Propiedades</h3>
-            <div class="code-wrap">
-                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                <pre><code>Unblock-File -Path "$HOME\Downloads\esp.exe"</code></pre>
-            </div>
-            <h3>Opción C: Restaurar o excluir en Seguridad de Windows</h3>
+
+            <h3>Opción B: Desbloquear el archivo desde Propiedades o PowerShell</h3>
             <ol>
-                <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong> y restaura <code>esp.exe</code> si fue puesto en cuarentena.</li>
-                <li>Agrega tu carpeta de trabajo o compilación (por ejemplo <code>C:\ESP</code>) en <strong>Exclusiones</strong>.</li>
+                <li>Haz clic derecho sobre <code>esp.exe</code> y selecciona <strong>Propiedades</strong>.</li>
+                <li>En la pestaña <strong>General</strong> (abajo a la derecha), marca la casilla <strong>Desbloquear</strong> y pulsa <strong>Aceptar</strong>.</li>
+                <li>O bien ejecuta este comando en PowerShell para quitar la marca de descarga de Internet:</li>
+            </ol>
+            <pre><code>Unblock-File -Path "$HOME\Downloads\esp.exe"</code></pre>
+
+            <h3>Opción C: Si Antivirus de Windows Defender lo pone en cuarentena</h3>
+            <ol>
+                <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong>.</li>
+                <li>Selecciona el evento reciente de <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
+                <li>Para evitar futuras alertas al compilar tus propios <code>.exe</code> con <code>esp compilar</code>, añade tu carpeta de instalación (<code>C:\ESP</code>) en <strong>Administrar la configuración</strong> → <strong>Exclusiones</strong>.</li>
             </ol>
         </div>
     </section>
 
-    <section id="cli">
-        <h2>2. Comandos CLI y Compilación</h2>
-        <div class="card">
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr><th>Comando</th><th>Descripción</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><code>esp</code></td><td>Inicia la consola interactiva (REPL).</td></tr>
-                        <tr><td><code>esp archivo.esp</code></td><td>Ejecuta un script en ESP 2.0.0.</td></tr>
-                        <tr><td><code>esp compilar prog.esp -o prog.exe -O3</code></td><td>Compila a binario nativo (<code>exe</code>, <code>dll</code>, <code>so</code>, <code>dylib</code>, <code>estatica</code>, <code>ll</code>, <code>cpp</code>).</td></tr>
-                        <tr><td><code>esp verificar prog.esp</code></td><td>Valida la sintaxis sin ejecutar el programa.</td></tr>
-                        <tr><td><code>esp formatear prog.esp</code></td><td>Formatea e indenta automáticamente un archivo <code>.esp</code>.</td></tr>
-                        <tr><td><code>esp instalar paquete --sha256 &lt;hash&gt;</code></td><td>Descarga e instala un paquete verificando su firma SHA-256.</td></tr>
-                        <tr><td><code>esp nodo escuchar --puerto 9500</code></td><td>Levanta un nodo de red para ejecución remota en clúster.</td></tr>
-                        <tr><td><code>esp lsp</code></td><td>Inicia el servidor de lenguaje (LSP) por entrada/salida estándar.</td></tr>
-                    </tbody>
-                </table>
+    <section id="primeros-pasos">
+        <h2>2. Primeros Pasos y Comandos Principales</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Ejecutar un archivo .esp</h3>
+                <p>Crea un archivo <code>hola.esp</code> y ejecútalo directamente desde cualquier carpeta:</p>
+                <pre><code>mostrar("¡Hola desde ESP 2.1.0!")</code></pre>
+                <pre><code>esp hola.esp</code></pre>
             </div>
+            <div class="card">
+                <h3>Compilar a Ejecutable Nativo (.exe)</h3>
+                <p>Convierte tu código ESP en un binario nativo independiente optimizado con <code>-O3</code>:</p>
+                <pre><code>esp compilar hola.esp -o hola.exe -O3
+.\hola.exe</code></pre>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Subcomandos CLI Disponibles</h3>
+            <ul>
+                <li><code>esp</code> — Inicia la consola interactiva (REPL).</li>
+                <li><code>esp &lt;archivo.esp&gt;</code> — Ejecuta un script ESP.</li>
+                <li><code>esp verificar &lt;archivo.esp&gt;</code> — Valida la sintaxis sin ejecutar.</li>
+                <li><code>esp compilar &lt;archivo.esp&gt; [-o salida] [--formato exe|dll|so|dylib|estatica|ll|cpp] [-O0|-O1|-O2|-O3]</code> — Compila a binario nativo, biblioteca o código intermedio.</li>
+                <li><code>esp formatear &lt;archivo.esp&gt;</code> — Indenta automáticamente los bloques <code>fin</code>.</li>
+                <li><code>esp instalar &lt;paquete&gt; [--url &lt;url&gt;] [--sha256 &lt;hash&gt;]</code> — Descarga e instala paquetes verificando SHA-256.</li>
+                <li><code>esp lsp</code> — Inicia el servidor Language Server Protocol (JSON-RPC) para editores.</li>
+                <li><code>esp nodo &lt;escuchar|conectar|ejecutar&gt;</code> — Ejecución distribuida en cluster por red IP.</li>
+            </ul>
         </div>
     </section>
 
     <section id="palabras-clave">
-        <h2>3. Documentación y Ejemplos de Cada Palabra Clave</h2>
-
+        <h2>3. Documentación Completa de Palabras Clave y Ejemplos</h2>
         <div class="card">
-            <h3>A. Variables, Constantes y Literales</h3>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>variable</code> <span class="kw-alias">Alias: <code>var</code></span></div>
-                <p>Declara una variable mutable cuyo valor puede asignarse o modificarse durante la ejecución.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable contador = 0
-contador = contador + 5
-mostrar(contador)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>constante</code> <span class="kw-alias">Alias: <code>const</code></span></div>
-                <p>Declara un valor constante que debe inicializarse al definirse y no puede reasignarse.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>constante VERSION_APP = "2.0.0"
+            <h3>3.1. <code>variable / var</code></h3>
+            <p>Declara una variable mutable en el ámbito actual.</p>
+            <pre><code>variable puntos = 10
+puntos = puntos + 5
+mostrar(puntos)</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.2. <code>constante / const</code></h3>
+            <p>Declara una constante que no puede reasignarse.</p>
+            <pre><code>constante VERSION_APP = "2.1.0"
 mostrar(VERSION_APP)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>verdadero</code> y <code>falso</code> <span class="kw-alias">Alias: <code>true</code>, <code>false</code></span></div>
-                <p>Literales booleanos para representar valores lógicos de verdad o falsedad.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable activo = verdadero
-variable suspendido = falso
-mostrar(activo)
-mostrar(suspendido)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>nulo</code> <span class="kw-alias">Alias: <code>null</code></span></div>
-                <p>Representa un valor vacío o inexistente.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable resultado = nulo
-si resultado == nulo
-    mostrar("Sin valor asignado")
-fin</code></pre>
-                </div>
-            </div>
         </div>
-
         <div class="card">
-            <h3>B. Funciones, Retorno, Cierre de Bloques y POO</h3>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>funcion</code> <span class="kw-alias">Alias: <code>function</code>, <code>fn</code></span></div>
-                <p>Define una función reutilizable o un método de clase, con soporte para parámetros por defecto.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>funcion saludar(nombre = "mundo")
-    mostrar("Hola, " + nombre)
-fin
-
-saludar("Rafa")
-saludar()</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>devolver</code> <span class="kw-alias">Alias: <code>return</code></span></div>
-                <p>Sale de la función actual y devuelve un valor al llamador.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>funcion doble(x)
-    devolver x * 2
-fin
-
-mostrar(doble(7))</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>fin</code> <span class="kw-alias">Alias: <code>end</code></span></div>
-                <p>Cierra cualquier bloque delimitado (<code>funcion</code>, <code>clase</code>, <code>si</code>, <code>mientras</code>, <code>para</code>, <code>intenta</code>, <code>pagina</code>, <code>estilo</code>, <code>script</code> y <code>contenedor</code>).</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>si verdadero
-    mostrar("Bloque cerrado con fin")
+            <h3>3.3. <code>verdadero / true</code></h3>
+            <p>Valor booleano verdadero.</p>
+            <pre><code>variable listo = verdadero
+si listo
+    mostrar("Listo")
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>clase</code> <span class="kw-alias">Alias: <code>class</code></span></div>
-                <p>Define un molde con propiedades y métodos para instanciar objetos.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>clase Usuario
-    publico variable nombre = ""
-    publico funcion iniciar(n)
-        este.nombre = n
-    fin
-fin
-
-variable u = Usuario("Ana")
-mostrar(u.nombre)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>hereda</code> <span class="kw-alias">Alias: <code>extends</code>, <code>de</code></span></div>
-                <p>Permite que una clase herede propiedades y métodos de otra clase.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>clase Animal
-    publico funcion hablar()
-        devolver "Sonido"
-    fin
-fin
-
-clase Perro hereda Animal
-    publico funcion ladrar()
-        devolver "Guau"
-    fin
-fin
-
-variable p = Perro()
-mostrar(p.hablar())
-mostrar(p.ladrar())</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>este</code> <span class="kw-alias">Alias: <code>this</code></span></div>
-                <p>Accede a las propiedades o métodos de la instancia actual dentro de un método.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>clase Caja
-    publico variable valor = 0
-    publico funcion establecer(v)
-        este.valor = v
-    fin
-fin
-
-variable c = Caja()
-c.establecer(42)
-mostrar(c.valor)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>super</code></div>
-                <p>Invoca o accede a miembros definidos en la clase padre desde una subclase.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>clase Padre
-    publico funcion iniciar()
-        mostrar("Padre iniciado")
-    fin
-fin
-
-clase Hijo hereda Padre
-    publico funcion iniciar()
-        super.iniciar()
-        mostrar("Hijo iniciado")
-    fin
-fin
-
-variable h = Hijo()
-h.iniciar()</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>publico</code> y <code>privado</code> <span class="kw-alias">Alias: <code>publica</code>, <code>public</code> / <code>privada</code>, <code>private</code></span></div>
-                <p>Modificadores de visibilidad para propiedades, métodos y declaraciones.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>clase Boveda
-    privado variable secreto = "1234"
-    publico funcion leer_clave()
-        devolver este.secreto
-    fin
-fin
-
-variable b = Boveda()
-mostrar(b.leer_clave())</code></pre>
-                </div>
-            </div>
         </div>
-
         <div class="card">
-            <h3>C. Condicionales, Bucles, Lógicos, Módulos y Excepciones</h3>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>si</code>, <code>si_no_si</code> y <code>sino</code> <span class="kw-alias">Alias: <code>if</code>, <code>elseif</code>, <code>si_no</code>, <code>else</code></span></div>
-                <p>Evalúan condiciones y ejecutan la rama correspondiente según el resultado booleano.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable nota = 85
-si nota &gt;= 90
-    mostrar("Excelente")
-si_no_si nota &gt;= 70
-    mostrar("Aprobado")
+            <h3>3.4. <code>falso / false</code></h3>
+            <p>Valor booleano falso.</p>
+            <pre><code>variable error_critico = falso
+si no error_critico
+    mostrar("Sin errores")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.5. <code>nulo / null</code></h3>
+            <p>Representa ausencia de valor.</p>
+            <pre><code>variable dato = nulo
+si dato == nulo
+    mostrar("Es nulo")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.6. <code>funcion / function / fn</code></h3>
+            <p>Define una función con parámetros y cuerpo.</p>
+            <pre><code>funcion saludar(nombre)
+    devolver "Hola, " + nombre
+fin
+mostrar(saludar("ESP"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.7. <code>devolver / return</code></h3>
+            <p>Retorna un valor desde una función.</p>
+            <pre><code>funcion doble(n)
+    devolver n * 2
+fin
+mostrar(doble(8))</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.8. <code>fin / end</code></h3>
+            <p>Cierra bloques de funciones, clases, condicionales, bucles, páginas y estilos.</p>
+            <pre><code>si verdadero
+    mostrar("Dentro del bloque")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.9. <code>si / if</code></h3>
+            <p>Evalúa una condición y ejecuta su bloque si es verdadera.</p>
+            <pre><code>variable edad = 20
+si edad >= 18
+    mostrar("Mayor de edad")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.10. <code>si_no_si / elseif</code></h3>
+            <p>Agrega condiciones alternativas intermedias en un bloque si.</p>
+            <pre><code>variable nota = 85
+si nota >= 90
+    mostrar("A")
+si_no_si nota >= 80
+    mostrar("B")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.11. <code>sino / si_no / else</code></h3>
+            <p>Ejecuta un bloque cuando ninguna condición anterior se cumple.</p>
+            <pre><code>variable x = 1
+si x > 10
+    mostrar("Grande")
 sino
-    mostrar("Reprobado")
+    mostrar("Pequeno")
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>mientras</code> <span class="kw-alias">Alias: <code>while</code></span></div>
-                <p>Repite un bloque de código mientras la condición siga siendo verdadera.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable n = 1
-mientras n &lt;= 3
-    mostrar(n)
-    n = n + 1
+        </div>
+        <div class="card">
+            <h3>3.12. <code>mientras / while</code></h3>
+            <p>Repite un bloque mientras la condición sea verdadera.</p>
+            <pre><code>variable c = 1
+mientras c <= 3
+    mostrar(c)
+    c = c + 1
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>para</code>, <code>hasta</code>, <code>paso</code> y <code>en</code> <span class="kw-alias">Alias: <code>for</code>, <code>to</code>, <code>step</code>, <code>in</code></span></div>
-                <p>Crea bucles numéricos con <code>hasta</code> (y <code>paso</code> opcional) o recorre elementos con <code>en</code>.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>para i = 0 hasta 6 paso 2
+        </div>
+        <div class="card">
+            <h3>3.13. <code>para ... hasta ... paso</code></h3>
+            <p>Bucle numérico desde inicio hasta fin con incremento opcional.</p>
+            <pre><code>para i = 1 hasta 5 paso 2
     mostrar(i)
-fin
-
-para fruta en ["manzana", "pera"]
-    mostrar(fruta)
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>romper</code> y <code>continuar</code> <span class="kw-alias">Alias: <code>break</code>, <code>continue</code></span></div>
-                <p><code>romper</code> detiene el bucle actual; <code>continuar</code> pasa directamente a la siguiente iteración.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>para i = 1 hasta 5
-    si i == 2
-        continuar
-    fin
+        </div>
+        <div class="card">
+            <h3>3.14. <code>para ... en</code></h3>
+            <p>Recorre los elementos de una lista o los caracteres de un texto.</p>
+            <pre><code>variable items = ["a", "b", "c"]
+para item en items
+    mostrar(item)
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.15. <code>romper / break</code></h3>
+            <p>Sale inmediatamente de un bucle mientras o para.</p>
+            <pre><code>para i = 1 hasta 10
     si i == 4
         romper
     fin
     mostrar(i)
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>y</code>, <code>o</code> y <code>no</code> <span class="kw-alias">Alias: <code>and</code>, <code>or</code>, <code>not</code></span></div>
-                <p>Operadores lógicos para combinar o negar expresiones booleanas.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable x = 5
-si (x &gt; 0 y x &lt; 10) o no falso
-    mostrar("Condición lógica verdadera")
+        </div>
+        <div class="card">
+            <h3>3.16. <code>continuar / continue</code></h3>
+            <p>Salta a la siguiente iteración del bucle.</p>
+            <pre><code>para i = 1 hasta 5
+    si i == 2
+        continuar
+    fin
+    mostrar(i)
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>conseguir</code>, <code>como</code> y <code>exportar</code> <span class="kw-alias">Alias: <code>importar</code>, <code>as</code>, <code>export</code></span></div>
-                <p><code>conseguir</code> importa módulos o archivos, <code>como</code> define un alias y <code>exportar</code> expone un símbolo.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>conseguir matematicas como mat
-mostrar(mat.raiz(16))
-
-funcion helper()
-    devolver "ok"
+        </div>
+        <div class="card">
+            <h3>3.17. <code>y / and</code></h3>
+            <p>Operador lógico Y (conjunción en cortocircuito).</p>
+            <pre><code>si verdadero y verdadero
+    mostrar("Ambos verdaderos")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.18. <code>o / or</code></h3>
+            <p>Operador lógico O (disyunción en cortocircuito).</p>
+            <pre><code>si falso o verdadero
+    mostrar("Al menos uno verdadero")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.19. <code>no / not</code></h3>
+            <p>Operador lógico de negación.</p>
+            <pre><code>si no falso
+    mostrar("Negacion verdadera")
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.20. <code>clase / class</code></h3>
+            <p>Define una clase con propiedades y métodos.</p>
+            <pre><code>clase Contador
+    publico variable valor = 0
+    publico funcion incrementar()
+        este.valor = este.valor + 1
+    fin
 fin
-exportar helper</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>intenta</code> y <code>si_no_puede</code> <span class="kw-alias">Alias: <code>try</code>, <code>catch</code></span></div>
-                <p>Captura errores en tiempo de ejecución sin detener abruptamente el programa.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>intenta
-    mostrar(10 / 0)
-si_no_puede error
-    mostrar("Capturado: " + error)
-fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>datos</code> y <code>lista</code></div>
-                <p>Palabras clave reservadas por el analizador léxico del lenguaje.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>variable elementos = [1, 2, 3]
-mostrar(elementos)</code></pre>
-                </div>
-            </div>
+variable cnt = Contador()
+cnt.incrementar()
+mostrar(cnt.valor)</code></pre>
         </div>
-
         <div class="card">
-            <h3>D. Palabras Clave de SQL Nativo en Español</h3>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>base_datos</code></div>
-                <p>Abre o crea una base de datos SQL para las siguientes sentencias nativas.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>base_datos "sistema.db"</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>crear_tabla</code></div>
-                <p>Crea una nueva tabla con la lista de columnas indicada.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>base_datos "sistema.db"
-crear_tabla clientes(id, nombre, ciudad)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>insertar_en</code> y <code>valores</code></div>
-                <p>Inserta una fila en una tabla especificando columnas y sus valores correspondientes.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>base_datos "sistema.db"
-crear_tabla clientes(id, nombre, ciudad)
-insertar_en clientes(id, nombre, ciudad) valores (1, "Lucía", "Monterrey")</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>seleccionar</code>, <code>de</code>, <code>donde</code>, <code>ordenar_por</code> y <code>limite</code></div>
-                <p>Consulta registros desde una tabla, filtra con <code>donde</code>, ordena con <code>ordenar_por</code> y acota con <code>limite</code>.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>base_datos "sistema.db"
-variable top = seleccionar nombre de clientes donde ciudad == "Monterrey" ordenar_por id desc limite 1
-mostrar(top)</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>actualizar</code> y <code>poner</code></div>
-                <p>Modifica columnas de las filas que cumplan la condición indicada.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>base_datos "sistema.db"
-actualizar clientes poner ciudad = "Guadalajara" donde id == 1</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>eliminar_de</code></div>
-                <p>Elimina filas de una tabla (con filtro opcional <code>donde</code>).</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>base_datos "sistema.db"
-eliminar_de clientes donde id == 1</code></pre>
-                </div>
-            </div>
+            <h3>3.21. <code>hereda / extends</code></h3>
+            <p>Permite que una clase herede propiedades y métodos de otra.</p>
+            <pre><code>clase Base
+    publico variable origen = "base"
+fin
+clase Hija hereda Base
+    publico funcion mostrar_origen()
+        mostrar(este.origen)
+    fin
+fin
+variable h = Hija()
+h.mostrar_origen()</code></pre>
         </div>
-
         <div class="card">
-            <h3>E. Palabras Clave de Web Nativa en Español</h3>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>pagina</code></div>
-                <p>Declara un documento web con su título y contenido hasta <code>fin</code>.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Portal ESP"
-    encabezado "Bienvenido"
+            <h3>3.22. <code>este / this</code></h3>
+            <p>Referencia a la instancia actual dentro de un método.</p>
+            <pre><code>clase Usuario
+    publico variable nick = ""
+    publico funcion iniciar(n)
+        este.nick = n
+    fin
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>estilo</code></div>
-                <p>Define reglas de estilo para un selector dentro de una página.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Estilos"
+        </div>
+        <div class="card">
+            <h3>3.23. <code>super</code></h3>
+            <p>Referencia a la clase padre en métodos de una clase hija.</p>
+            <pre><code>clase Padre
+    publico funcion info()
+        mostrar("Info padre")
+    fin
+fin
+clase Hijo hereda Padre
+    publico funcion info_hijo()
+        mostrar(super)
+    fin
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.24. <code>publico / publica / public</code></h3>
+            <p>Marca un miembro o declaración como público.</p>
+            <pre><code>clase Caja
+    publico variable contenido = "ok"
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.25. <code>privado / privada / private</code></h3>
+            <p>Restringe el acceso a propiedades o métodos privados.</p>
+            <pre><code>clase Secreto
+    privado variable clave = "1234"
+    publico funcion ver()
+        devolver este.clave
+    fin
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.26. <code>conseguir / importar</code></h3>
+            <p>Carga un módulo estándar, local o remoto.</p>
+            <pre><code>conseguir matematicas
+mostrar(matematicas.PI)</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.27. <code>como / as</code></h3>
+            <p>Asigna un alias al importar un módulo.</p>
+            <pre><code>conseguir matematicas como mat
+mostrar(mat.abs(-9))</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.28. <code>exportar / export</code></h3>
+            <p>Marca un símbolo del ámbito actual como exportado.</p>
+            <pre><code>variable API_PUBLICA = 1
+exportar API_PUBLICA</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.29. <code>intenta / try</code></h3>
+            <p>Inicia un bloque protegido para capturar errores en ejecución.</p>
+            <pre><code>intenta
+    variable r = 10 / 2
+    mostrar(r)
+si_no_puede e
+    mostrar(e)
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.30. <code>si_no_puede / catch</code></h3>
+            <p>Captura y maneja el error ocurrido en intenta.</p>
+            <pre><code>intenta
+    variable mala = 1 / 0
+si_no_puede err
+    mostrar("Capturado: " + err)
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.31. <code>base_datos</code></h3>
+            <p>Abre o selecciona una base de datos SQL.</p>
+            <pre><code>base_datos "sistema.db"
+crear_tabla logs(id, mensaje)</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.32. <code>crear_tabla</code></h3>
+            <p>Crea una tabla en la base de datos activa.</p>
+            <pre><code>crear_tabla notas(id, titulo)
+insertar_en notas(id, titulo) valores (1, "Inicio")</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.33. <code>insertar_en / valores</code></h3>
+            <p>Inserta registros en una tabla.</p>
+            <pre><code>insertar_en notas(id, titulo) valores (2, "Segundo")</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.34. <code>seleccionar / de / donde / ordenar_por / limite</code></h3>
+            <p>Consulta registros con filtros, orden y límite.</p>
+            <pre><code>variable filas = seleccionar * de notas donde id >= 1 ordenar_por id desc limite 10
+mostrar(filas)</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.35. <code>actualizar / poner</code></h3>
+            <p>Actualiza columnas de filas que cumplan una condición.</p>
+            <pre><code>actualizar notas poner titulo = "Editado" donde id = 1</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.36. <code>eliminar_de</code></h3>
+            <p>Elimina filas de una tabla.</p>
+            <pre><code>eliminar_de notas donde id = 2</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.37. <code>pagina</code></h3>
+            <p>Define una página web completa con estilos, elementos y scripts.</p>
+            <pre><code>pagina "Portal ESP"
+    encabezado "Hola Web"
+    parrafo "Generado desde ESP"
+fin</code></pre>
+        </div>
+        <div class="card">
+            <h3>3.38. <code>estilo</code></h3>
+            <p>Define reglas de estilo CSS para un selector.</p>
+            <pre><code>pagina "Estilos"
     estilo body
         fondo = "#080c17"
         color_texto = "#f1f5f9"
     fin
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>script</code></div>
-                <p>Añade un bloque de lógica transpilada a JavaScript dentro de la página.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Con Script"
+        </div>
+        <div class="card">
+            <h3>3.39. <code>script</code></h3>
+            <p>Inserta lógica transpilada a JavaScript en la página.</p>
+            <pre><code>pagina "Script"
     script
-        consola("Cargado desde ESP")
+        consola("Listo")
     fin
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>encabezado</code>, <code>subtitulo</code> y <code>parrafo</code></div>
-                <p>Insertan títulos principales, subtítulos y párrafos de texto en la página.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Textos"
-    encabezado "Título"
-    subtitulo "Subtítulo"
-    parrafo "Cuerpo del mensaje"
+        </div>
+        <div class="card">
+            <h3>3.40. <code>encabezado / subtitulo / parrafo</code></h3>
+            <p>Elementos de texto estructurado en una página ESP.</p>
+            <pre><code>pagina "Textos"
+    encabezado "Titulo"
+    subtitulo "Subtitulo"
+    parrafo "Contenido del parrafo"
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>entrada</code>, <code>enlace</code> y <code>imagen</code></div>
-                <p>Crean campos de entrada, hipervínculos e imágenes dentro de la página.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Elementos"
-    entrada "tu_correo"
-    enlace "Repositorio", "https://github.com/rafa247/web_esp"
-    imagen "banner.png", "Banner"
-fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>boton</code> y <code>al_clic</code></div>
-                <p>Agregan un botón interactivo y definen qué ocurre al pulsarlo con <code>al_clic</code>.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Interactiva"
-    boton "Pulsar aquí" al_clic
-        alerta("¡Botón pulsado!")
+        </div>
+        <div class="card">
+            <h3>3.41. <code>boton / al_clic</code></h3>
+            <p>Crea un botón interactivo con manejador al_clic.</p>
+            <pre><code>pagina "Boton"
+    boton "Click" al_clic
+        alerta("Pulsado")
     fin
 fin</code></pre>
-                </div>
-            </div>
-
-            <div class="kw-item">
-                <div class="kw-header"><code>contenedor</code></div>
-                <p>Agrupa elementos y sub bloques dentro de un contenedor.</p>
-                <div class="code-wrap">
-                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
-                    <pre><code>pagina "Contenedor"
-    contenedor "tarjeta"
-        encabezado "Dentro de tarjeta"
-        parrafo "Contenido agrupado"
+        </div>
+        <div class="card">
+            <h3>3.42. <code>entrada / enlace / imagen / contenedor</code></h3>
+            <p>Controles de formulario, enlaces, imágenes y contenedores.</p>
+            <pre><code>pagina "Componentes"
+    contenedor "caja"
+        entrada "Nombre"
+        enlace "Web", "https://rafa247.github.io/web_esp/"
+        imagen "logo.png", "Logo ESP"
     fin
 fin</code></pre>
-                </div>
-            </div>
         </div>
     </section>
 
     <section id="modulos">
-        <h2>4. Palabras y Funciones de Cada Módulo</h2>
-
+        <h2>4. Catálogo Completo de Módulos Estándar y Funciones</h2>
         <div class="card">
-            <h3>Sistema, Archivos y Rutas</h3>
-            <ul>
-                <li><code>archivos</code>: <code>leer(ruta)</code>, <code>escribir(ruta, texto)</code>, <code>anexar(ruta, texto)</code>, <code>existe(ruta)</code>, <code>eliminar(ruta)</code>, <code>crear_directorio(ruta)</code>, <code>listar(dir?)</code>.</li>
-                <li><code>rutas</code>: <code>unir(p1, p2, ...)</code>, <code>absoluta(ruta)</code>, <code>padre(ruta)</code>, <code>nombre(ruta)</code>, <code>extension(ruta)</code>, <code>tamano(ruta)</code>, <code>recorrer(dir?)</code>.</li>
-                <li><code>sistema</code> / <code>sistema.os</code>: <code>nombre()</code>, <code>variable(nombre)</code>, <code>prioridad(alta|normal|baja)</code>.</li>
-                <li><code>sistema.procesos</code> / <code>subprocess</code>: <code>ejecutar(comando, timeout_ms?)</code> (devuelve <code>codigo</code>, <code>salida</code>, <code>error</code>).</li>
-                <li><code>hardware</code>: <code>nucleos()</code>, <code>arquitectura()</code>, <code>memoria_total_mb()</code>, <code>memoria_libre_mb()</code>.</li>
-                <li><code>os</code> / <code>kernel</code>: <code>nombre()</code>, <code>pid()</code>, <code>directorio_actual()</code>, <code>cambiar_directorio(ruta)</code>, <code>variable(nombre)</code>, <code>establecer_variable(clave, valor)</code>, <code>listar(dir?)</code>, <code>recorrer(dir?)</code>, <code>unir_ruta(...)</code>, <code>existe(ruta)</code>, <code>crear_directorio(ruta)</code>, <code>eliminar(ruta)</code>, <code>copiar(orig, dest)</code>, <code>mover(orig, dest)</code>, <code>ejecutar(comando, timeout_ms?)</code>, <code>asignar_memoria(tam)</code>, <code>escribir_byte(id, dir, val)</code>, <code>leer_byte(id, dir)</code>, <code>liberar_memoria(id)</code>, <code>generar_boot_sector(ruta, msg)</code>, <code>generar_kernel_32(ruta, msg)</code>.</li>
-            </ul>
+            <h3>4.1. Módulo <code>archivos</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>leer(ruta), escribir(ruta, texto), anexar(ruta, texto), existe(ruta), eliminar(ruta), crear_directorio(ruta), listar(dir?)</code></p>
+            <pre><code>conseguir archivos
+archivos.escribir("test.txt", "hola")
+mostrar(archivos.leer("test.txt"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.2. Módulo <code>rutas</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>unir(p1, p2, ...), absoluta(ruta), padre(ruta), nombre(ruta), extension(ruta), tamano(ruta), recorrer(dir?)</code></p>
+            <pre><code>conseguir rutas
+mostrar(rutas.unir("carpeta", "archivo.esp"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.3. Módulo <code>os / kernel</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>nombre(), pid(), directorio_actual(), cambiar_directorio(ruta), variable(k), establecer_variable(k,v), listar(d?), recorrer(d?), unir_ruta(...), existe(r), crear_directorio(r), eliminar(r), copiar(o,d), mover(o,d), ejecutar(cmd, timeout?), asignar_memoria(bytes), escribir_byte(id, dir, val), leer_byte(id, dir), liberar_memoria(id), generar_boot_sector(r, msg), generar_kernel_32(r, msg), generar_iso(iso, etq, boot, ker?, extras?)</code></p>
+            <pre><code>conseguir os
+mostrar(os.nombre())
+os.generar_boot_sector("boot.bin", "rf OS")</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.4. Módulo <code>sistema / sistema.os</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>nombre(), variable(nombre), prioridad(alta|normal|baja)</code></p>
+            <pre><code>conseguir sistema
+mostrar(sistema.nombre())</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.5. Módulo <code>sistema.procesos / subprocess</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>ejecutar(comando, timeout_ms?)</code></p>
+            <pre><code>conseguir sistema.procesos como proc
+variable r = proc.ejecutar("echo hola")
+mostrar(r["codigo"])</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.6. Módulo <code>hardware</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>nucleos(), arquitectura(), memoria_total_mb(), memoria_libre_mb()</code></p>
+            <pre><code>conseguir hardware
+mostrar(hardware.nucleos(), hardware.arquitectura())</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.7. Módulo <code>tiempo</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>ahora_ms(), ahora_us(), esperar(milisegundos)</code></p>
+            <pre><code>conseguir tiempo
+mostrar(tiempo.ahora_ms())</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.8. Módulo <code>matematicas</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>raiz(x), abs(x), seno(x), coseno(x), log(x), redondear(x), min(a,b), max(a,b), PI, E</code></p>
+            <pre><code>conseguir matematicas as m
+mostrar(m.raiz(25), m.PI)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.9. Módulo <code>aleatorio</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>semilla(n), entero(min, max), decimal(), elegir(lista), mezclar(lista)</code></p>
+            <pre><code>conseguir aleatorio
+aleatorio.semilla(42)
+mostrar(aleatorio.entero(1, 100))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.10. Módulo <code>estadistica</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>media(lista)</code></p>
+            <pre><code>conseguir estadistica
+mostrar(estadistica.media([10, 20, 30]))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.11. Módulo <code>base64</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>codificar(texto), decodificar(b64)</code></p>
+            <pre><code>conseguir base64
+variable enc = base64.codificar("ESP")
+mostrar(enc, base64.decodificar(enc))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.12. Módulo <code>hilos</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>ejecutar_paralelo(lista_codigos_esp)</code></p>
+            <pre><code>conseguir hilos
+mostrar(hilos.ejecutar_paralelo(["1 + 1", "2 + 2"]))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.13. Módulo <code>tensores</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>producto_punto(v1, v2), multiplicar(mat_a, mat_b)</code></p>
+            <pre><code>conseguir tensores
+mostrar(tensores.producto_punto([1, 2], [3, 4]))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.14. Módulo <code>datos.sql / sql</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>abrir(ruta?), consultar(ruta, sql, params?), conectar_externo(motor)</code></p>
+            <pre><code>conseguir datos.sql como sql
+sql.abrir(":memoria:")
+sql.consultar(":memoria:", "CREAR TABLA t(x)")</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.15. Módulo <code>redes.dns / dns</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>resolver(dominio)</code></p>
+            <pre><code>conseguir redes.dns como dns
+mostrar(dns.resolver("localhost"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.16. Módulo <code>redes.http / http / requests</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>obtener(url, headers?), peticion(metodo, url, cuerpo?, headers?), enviar_post(url, cuerpo, headers?), descargar(url, destino)</code></p>
+            <pre><code>conseguir http
+mostrar(http.obtener("https://rafa247.github.io/web_esp/"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.17. Módulo <code>redes.sockets / sockets</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>tcp_conectar(host, puerto, timeout?), enviar(id, datos), recibir(id, max?), cerrar(id), udp_enviar(host, puerto, msg), tcp_enviar(host, puerto, msg)</code></p>
+            <pre><code>conseguir sockets
+mostrar(sockets)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.18. Módulo <code>redes.ip</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>local(), direccion(ip), red(cidr, estricto?), hosts(cidr, lim?), subredes(cidr, pref), superred(cidr, pref), se_solapan(c1, c2), contiene(cidr, x), puntero_inverso(ip), validar(ip), a_entero(ip4), desde_entero(n), latencia_tcp(ip, puerto, t?), enrutar_mas_rapida(ips, puerto, t?), escanear_red(cidr, puerto, t?)</code></p>
+            <pre><code>conseguir redes.ip como ip
+mostrar(ip.red("192.168.1.0/24"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.19. Módulo <code>websockets / ws</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>escuchar_uno(puerto), enviar(id, msg), recibir(id), cerrar(id)</code></p>
+            <pre><code>conseguir websockets
+mostrar(websockets)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.20. Módulo <code>web</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>pagina(titulo, html, css?, js?), tarjeta(titulo, desc, btn?, url?), tabla(cols, filas), formulario(accion, metodo, campos, btn?), servidor(puerto, rutas_mapa, max_req?)</code></p>
+            <pre><code>conseguir web
+mostrar(web.tarjeta("ESP", "Lenguaje en espanol"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.21. Módulo <code>servidor</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>http(puerto, cuerpo_o_mapa_rutas, max_peticiones?)</code></p>
+            <pre><code>conseguir servidor
+mostrar(servidor)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.22. Módulo <code>csv</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>parsear(texto, delim?), texto(filas, delim?)</code></p>
+            <pre><code>conseguir csv
+mostrar(csv.parsear("a,b\n1,2"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.23. Módulo <code>json</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>parsear / analizar / deserializar(texto), texto / serializar / codificar(valor)</code></p>
+            <pre><code>conseguir json
+variable obj = json.parsear("{\"ok\":true}")
+mostrar(obj["ok"])</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.24. Módulo <code>cripto / seguridad</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>sha256(txt), hmac_sha256(clave, msg), token_seguro(bytes?), uuid_v4(), hex_codificar(txt), hex_decodificar(hex), aes_cifrar(clave, txt), aes_descifrar(clave, hex)</code></p>
+            <pre><code>conseguir cripto
+mostrar(cripto.sha256("hola"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.25. Módulo <code>forense</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>analizar_ejecutable(ruta), extraer_strings(ruta, min_len?), escanear_puertos(ip, puertos, timeout?)</code></p>
+            <pre><code>conseguir forense
+mostrar(forense)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.26. Módulo <code>binario / struct</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>empaquetar(fmt, vals...), desempaquetar(fmt, buf), xor_bytes(datos, clave), a_hex(buf), de_hex(hex), leer_archivo_bytes(ruta), escribir_archivo_bytes(ruta, buf), entropia_shannon(buf)</code></p>
+            <pre><code>conseguir binario
+mostrar(binario.empaquetar("<BH", 1, 256))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.27. Módulo <code>re / regex</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>coincide(pat, txt, flags?), coincide_inicio(pat, txt, flags?), buscar(pat, txt, flags?), encontrar_todos(pat, txt, flags?), reemplazar(pat, rep, txt, flags?), dividir(pat, txt, flags?), escapar(txt)</code></p>
+            <pre><code>conseguir re
+mostrar(re.buscar("[0-9]+", "id-42"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.28. Módulo <code>ast</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>tokens(codigo_esp), analizar(codigo_esp)</code></p>
+            <pre><code>conseguir ast
+mostrar(ast.analizar("variable a = 1"))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.29. Módulo <code>lenguajes</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>crear(nombre), bloque(lang, abrir, cerrar), &lt;kw&gt;.nombre(lang, alias), transpilar(lang, cod), ejecutar(lang, cod), compilar(lang, cod, out, fmt?), empaquetar_lenguaje(lang, exe)</code></p>
+            <pre><code>conseguir lenguajes
+variable L = lenguajes.crear("MiLang")</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.30. Módulo <code>nativo / ffi / ctypes</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>abrir(ruta_dll_so), llamar_entero(lib_id, sym, a1?, a2?), cerrar(lib_id)</code></p>
+            <pre><code>conseguir nativo
+mostrar(nativo)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.31. Módulo <code>motor2d / motor3d / graficos</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>iniciar(w, h, titulo?), cerrar(), activa(), delta_tiempo(), tecla(vk), raton(), color_rgb(r,g,b,a?), limpiar(col?), cargar_imagen(ruta), info_imagen(id), dibujar_imagen(id,x,y,w?,h?), dibujar_sprite(id,sx,sy,sw,sh,dx,dy,dw?,dh?), aplicar_textura(obj,tex), pixel(x,y,c), rectangulo(x,y,w,h,c), circulo(cx,cy,r,c), linea(x0,y0,x1,y1,c), texto(x,y,txt,c?,esc?), colisiona(x1,y1,w1,h1,x2,y2,w2,h2), luz(x,y,z,int), niebla(act,dist,col), crear_cubo(...), crear_piramide(...), crear_plano(...), cargar_obj(r,c?), transformar(id,x,y,z,rx,ry,rz), escalar(id,sx,sy,sz), camara(x,y,z,rx?,ry?,rz?), lanzar_rayo(ox,oy,oz,dx,dy,dz), renderizar_3d(), presentar()</code></p>
+            <pre><code>conseguir motor2d
+mostrar(motor2d.color_rgb(56, 189, 248))</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.32. Módulo <code>gui / interfaz</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>ventana(titulo, w?, h?), boton(vid, txt, x?, y?, w?, h?), etiqueta(vid, txt, x?, y?, w?, h?), campo_texto(vid, txt, x?, y?, w?, h?), leer_texto(cid), establecer_texto(cid, txt), ejecutar()</code></p>
+            <pre><code>conseguir gui
+mostrar(gui)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.33. Módulo <code>audio</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>reproducir(ruta_wav, bucle?), detener(), tono(hz, ms)</code></p>
+            <pre><code>conseguir audio
+mostrar(audio)</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.34. Módulo <code>pruebas</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>afirmar(cond, msg?)</code></p>
+            <pre><code>conseguir pruebas
+pruebas.afirmar(verdadero, "OK")</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.35. Módulo <code>compilacion</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>compilador()</code></p>
+            <pre><code>conseguir compilacion
+mostrar(compilacion.compilador())</code></pre>
+        </div>
+        <div class="card">
+            <h3>4.36. Módulo <code>__herramientas__</code></h3>
+            <p><strong>Funciones / Símbolos:</strong> <code>analizar(cod, arch?), diagnosticar(cod, arch?), compilar(cod, salida, fmt?, opt?)</code></p>
+            <pre><code>conseguir "__herramientas__" como h
+mostrar(h.analizar("variable x = 1"))</code></pre>
+        </div>
+    </section>
 
-            <h3>Redes, HTTP, Web y Tiempo Real</h3>
-            <ul>
-                <li><code>redes.http</code> / <code>web.http</code> / <code>http</code> / <code>requests</code>: <code>obtener(url, cabeceras?)</code>, <code>peticion(metodo, url, cuerpo?, cabeceras?)</code>, <code>enviar_post(url, cuerpo, cabeceras?)</code>, <code>descargar(url, ruta_destino)</code>.</li>
-                <li><code>redes.dns</code> / <code>dns</code>: <code>resolver(dominio)</code>.</li>
-                <li><code>redes.ip</code>: <code>local()</code>, <code>direccion(ip)</code>, <code>red(cidr, estricto?)</code>, <code>hosts(cidr, limite?)</code>, <code>subredes(cidr, nuevo_prefijo)</code>, <code>superred(cidr, nuevo_prefijo)</code>, <code>se_solapan(cidr1, cidr2)</code>, <code>contiene(cidr, ip_o_subred)</code>, <code>puntero_inverso(dir)</code>, <code>validar(dir)</code>, <code>a_entero(ipv4)</code>, <code>desde_entero(num)</code>, <code>latencia_tcp(ip, puerto, timeout_ms?)</code>, <code>enrutar_mas_rapida(lista_ips, puerto, timeout_ms?)</code>, <code>escanear_red(cidr, puerto, timeout_ms?)</code>.</li>
-                <li><code>redes.sockets</code> / <code>sockets</code>: <code>tcp_conectar(host, puerto, timeout_ms?)</code>, <code>enviar(id, datos)</code>, <code>recibir(id, max_bytes?)</code>, <code>cerrar(id)</code>, <code>udp_enviar(host, puerto, texto)</code>, <code>tcp_enviar(host, puerto, texto)</code>.</li>
-                <li><code>websockets</code> / <code>ws</code>: <code>escuchar_uno(puerto?)</code>, <code>enviar(id, msg)</code>, <code>recibir(id)</code>, <code>cerrar(id)</code>.</li>
-                <li><code>web</code> y <code>servidor</code>: <code>web.pagina(titulo, html, css?, js?)</code>, <code>web.tarjeta(titulo, desc, texto_boton?, enlace?)</code>, <code>web.tabla(cols, filas)</code>, <code>web.formulario(accion, metodo, campos, texto_enviar?)</code>, <code>web.servidor(puerto, rutas, max_peticiones?)</code> y <code>servidor.http(puerto?, cuerpo_o_rutas?, max_peticiones?)</code>.</li>
-            </ul>
+    <section id="rf-os">
+        <h2>5. rf OS — Sistema Operativo Triplataforma e ISO Booteable</h2>
+        <div class="card">
+            <h3>5.1. Generación de Sector de Arranque, Kernel 32-bit e Imagen ISO</h3>
+            <p>Usa el módulo <code>os</code> en ESP 2.1.0 para generar el sector de arranque x86, el kernel de 32 bits y la imagen <code>.iso</code> booteable El Torito en Windows, macOS y Linux:</p>
+            <pre><code>conseguir os
 
-            <h3>Datos, SQL, Formatos y Binarios</h3>
-            <ul>
-                <li><code>datos.sql</code> / <code>sql</code>: <code>abrir(ruta?)</code>, <code>consultar(ruta, sql, params?)</code>, <code>conectar_externo(motor)</code>.</li>
-                <li><code>json</code>: <code>parsear(texto)</code> (<code>analizar</code>, <code>deserializar</code>) y <code>texto(valor)</code> (<code>serializar</code>, <code>codificar</code>).</li>
-                <li><code>csv</code>: <code>parsear(texto, delim?)</code>, <code>texto(filas, delim?)</code>.</li>
-                <li><code>base64</code>: <code>codificar(texto)</code>, <code>decodificar(texto_b64)</code>.</li>
-                <li><code>binario</code> / <code>struct</code>: <code>empaquetar(fmt, vals...)</code>, <code>desempaquetar(fmt, datos)</code>, <code>xor_bytes(datos, clave)</code>, <code>a_hex(datos)</code>, <code>de_hex(hex)</code>, <code>leer_archivo_bytes(ruta)</code>, <code>escribir_archivo_bytes(ruta, bytes)</code>, <code>entropia_shannon(datos)</code>.</li>
-            </ul>
+os.generar_boot_sector("rf_os_boot.bin", "rf OS 2.1.0 - Arrancando...")
+os.generar_kernel_32("rf_os_kernel.bin", "rf OS Kernel x86 Activo")
+os.generar_iso("rf_OS_2.1.0.iso", "RF_OS", "rf_os_boot.bin", "rf_os_kernel.bin", ["rf_os.esp"])</code></pre>
+        </div>
+        <div class="card">
+            <h3>5.2. Gestión de Memoria Virtual y Procesos</h3>
+            <p>Administra bloques de memoria virtual aislados y ejecuta comandos del sistema en Windows, macOS y Linux:</p>
+            <pre><code>conseguir os
+conseguir hardware
 
-            <h3>Matemáticas, Concurrencia y Tiempo</h3>
-            <ul>
-                <li><code>matematicas</code>: <code>PI</code>, <code>E</code>, <code>raiz(x)</code>, <code>abs(x)</code>, <code>seno(x)</code>, <code>coseno(x)</code>, <code>log(x)</code>, <code>redondear(x)</code>, <code>min(a, b)</code>, <code>max(a, b)</code>.</li>
-                <li><code>aleatorio</code>: <code>semilla(num)</code>, <code>entero(min, max)</code>, <code>decimal()</code>, <code>elegir(lista)</code>, <code>mezclar(lista)</code>.</li>
-                <li><code>estadistica</code>: <code>media(lista)</code>.</li>
-                <li><code>tensores</code>: <code>producto_punto(v1, v2)</code>, <code>multiplicar(mat_a, mat_b)</code>.</li>
-                <li><code>hilos</code>: <code>ejecutar_paralelo(lista_codigos_esp)</code>.</li>
-                <li><code>tiempo</code>: <code>ahora_ms()</code>, <code>ahora_us()</code>, <code>esperar(ms)</code>.</li>
-            </ul>
-
-            <h3>Seguridad, Análisis, Gráficos y Lenguajes</h3>
-            <ul>
-                <li><code>cripto</code> / <code>seguridad</code>: <code>sha256(texto)</code>, <code>hmac_sha256(clave, msg)</code>, <code>token_seguro(nbytes?)</code>, <code>uuid_v4()</code>, <code>hex_codificar(txt)</code>, <code>hex_decodificar(hex)</code>, <code>aes_cifrar(clave, plano)</code>, <code>aes_descifrar(clave, hex)</code>.</li>
-                <li><code>re</code> / <code>regex</code>: <code>coincide(pat, txt, flags?)</code>, <code>coincide_inicio(pat, txt, flags?)</code>, <code>buscar(pat, txt, flags?)</code>, <code>encontrar_todos(pat, txt, flags?)</code>, <code>reemplazar(pat, rep, txt, flags?)</code>, <code>dividir(pat, txt, flags?)</code>, <code>escapar(txt)</code>.</li>
-                <li><code>forense</code>: <code>analizar_ejecutable(ruta)</code>, <code>extraer_strings(ruta, min_len?)</code>, <code>escanear_puertos(ip, puertos, timeout_ms?)</code>.</li>
-                <li><code>ast</code>: <code>tokens(codigo_esp)</code>, <code>analizar(codigo_esp)</code>.</li>
-                <li><code>motor2d</code> / <code>motor3d</code> / <code>graficos</code>: <code>iniciar(w?, h?, titulo?)</code>, <code>cerrar()</code>, <code>activa()</code>, <code>presentar()</code>, <code>delta_tiempo()</code>, <code>limpiar(col?)</code>, <code>tecla(vk)</code>, <code>raton()</code>, <code>color_rgb(r, g, b, a?)</code>, <code>cargar_imagen(ruta)</code>, <code>info_imagen(id)</code>, <code>dibujar_imagen(id, x, y, w?, h?)</code>, <code>dibujar_sprite(id, sx, sy, sw, sh, dx, dy, dw?, dh?)</code>, <code>pixel(x, y, col)</code>, <code>rectangulo(x, y, w, h, col)</code>, <code>circulo(cx, cy, r, col)</code>, <code>linea(x0, y0, x1, y1, col)</code>, <code>texto(x, y, cad, col?, esc?)</code>, <code>colisiona(x1, y1, w1, h1, x2, y2, w2, h2)</code>, <code>crear_cubo(...)</code>, <code>crear_piramide(...)</code>, <code>crear_plano(...)</code>, <code>cargar_obj(ruta, col?)</code>, <code>aplicar_textura(obj_id, img_id)</code>, <code>transformar(id, x, y, z, rx, ry, rz)</code>, <code>escalar(id, sx, sy, sz)</code>, <code>camara(x, y, z, rx?, ry?, rz?)</code>, <code>luz(x, y, z, int)</code>, <code>niebla(activa, dist, col)</code>, <code>lanzar_rayo(ox, oy, oz, dx, dy, dz)</code>, <code>renderizar_3d()</code>.</li>
-                <li><code>gui</code>: <code>ventana(titulo?, w?, h?)</code>, <code>boton(...)</code>, <code>etiqueta(...)</code>, <code>campo_texto(...)</code>, <code>leer_texto(id)</code>, <code>establecer_texto(id, txt)</code>, <code>ejecutar()</code>.</li>
-                <li><code>audio</code>: <code>reproducir(ruta_wav, bucle?)</code>, <code>detener()</code>, <code>tono(hz, ms)</code>.</li>
-                <li><code>nativo</code> / <code>ffi</code> / <code>ctypes</code>: <code>abrir(ruta_dll_o_so)</code>, <code>llamar_entero(lib_id, fn, arg1?, arg2?)</code>, <code>cerrar(lib_id)</code>.</li>
-                <li><code>lenguajes</code>: <code>crear(nombre)</code>, <code>bloque(lang, abrir, cerrar)</code>, <code>&lt;constructo&gt;.nombre(lang, alias)</code>, <code>transpilar(lang, cod)</code>, <code>ejecutar(lang, cod)</code>, <code>compilar(lang, cod, salida, fmt?)</code>, <code>empaquetar_lenguaje(lang, ruta_exe)</code>.</li>
-                <li><code>compilacion</code> y <code>pruebas</code>: <code>compilacion.compilador()</code> y <code>pruebas.afirmar(cond, msg?)</code>.</li>
-            </ul>
+variable mem_id = os.asignar_memoria(4096)
+os.escribir_byte(mem_id, 0, 65)
+mostrar("Byte en direccion 0:", os.leer_byte(mem_id, 0))
+os.liberar_memoria(mem_id)
+mostrar("Nucleos CPU:", hardware.nucleos(), "Arquitectura:", hardware.arquitectura())</code></pre>
         </div>
     </section>
 </main>
 
 <footer>
-    ESP 2.0.0 — Lenguaje de Programación Nativo en Español • Todos los derechos reservados
+    ESP 2.1.0 — Lenguaje de Programación Nativo en Español • Todos los derechos reservados
 </footer>
-
-<script>
-function copiarBloque(btn) {
-    const pre = btn.parentElement.querySelector("pre");
-    if (!pre) return;
-    navigator.clipboard.writeText(pre.innerText);
-    const original = btn.innerText;
-    btn.innerText = "¡Copiado!";
-    setTimeout(() => { btn.innerText = original; }, 1500);
-}
-</script>
 
 </body>
 </html>
