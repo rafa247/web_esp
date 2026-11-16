@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP 2.0.0 — Lenguaje de Programación Nativo en Español</title>
+    <title>ESP 2.0.0 — Documentación Oficial y Ejemplos</title>
     <style>
         :root {
             --bg: #080c17;
@@ -17,16 +17,55 @@
             --border: #263248;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
         body {
             background: var(--bg);
             color: var(--text);
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.65;
         }
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(8, 12, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.25rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-brand {
+            font-weight: 800;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 1rem;
+            list-style: none;
+            font-size: 0.88rem;
+        }
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .nav-links a:hover { color: var(--text); }
+
         header {
             background: radial-gradient(circle at top, #132347 0%, var(--bg) 70%);
             border-bottom: 1px solid var(--border);
-            padding: 4.5rem 1.5rem 3.5rem;
+            padding: 4rem 1.5rem 3.25rem;
             text-align: center;
         }
         .badge {
@@ -41,16 +80,16 @@
             margin-bottom: 1rem;
         }
         h1 {
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-size: clamp(2.1rem, 5vw, 3.4rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             margin-bottom: 1rem;
         }
         .lead {
-            max-width: 720px;
+            max-width: 740px;
             margin: 0 auto 2rem;
             color: var(--muted);
-            font-size: 1.15rem;
+            font-size: 1.12rem;
         }
         .cta-group {
             display: flex;
@@ -66,8 +105,8 @@
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
             color: #04101d;
             font-weight: 800;
-            font-size: 1.1rem;
-            padding: 1rem 2rem;
+            font-size: 1.05rem;
+            padding: 0.95rem 1.85rem;
             border-radius: 12px;
             text-decoration: none;
             box-shadow: 0 10px 30px rgba(45, 212, 191, 0.25);
@@ -85,16 +124,16 @@
             color: var(--text);
             border: 1px solid var(--border);
             font-weight: 600;
-            padding: 1rem 1.5rem;
+            padding: 0.95rem 1.4rem;
             border-radius: 12px;
             text-decoration: none;
         }
         .btn-secundario:hover { border-color: var(--accent); }
         .sha-box {
-            max-width: 680px;
+            max-width: 700px;
             margin: 1.35rem auto 0;
             padding: 0.75rem 1rem;
-            background: rgba(17, 24, 39, 0.85);
+            background: rgba(17, 24, 39, 0.88);
             border: 1px solid var(--border);
             border-radius: 10px;
             font-family: Consolas, monospace;
@@ -113,32 +152,33 @@
             color: var(--accent-2);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 0.2rem 0.6rem;
+            padding: 0.22rem 0.65rem;
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
         }
         .btn-copiar:hover { border-color: var(--accent-2); }
+
         main {
-            max-width: 1020px;
+            max-width: 1060px;
             margin: 0 auto;
             padding: 3rem 1.5rem 5rem;
         }
-        section { margin-bottom: 3.5rem; }
+        section { margin-bottom: 3.75rem; scroll-margin-top: 4.2rem; }
         h2 {
             font-size: 1.75rem;
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.5rem;
         }
-        h3 { font-size: 1.2rem; margin: 1.4rem 0 0.5rem; color: var(--accent); }
-        p { margin-bottom: 1rem; color: #cbd5e1; }
+        h3 { font-size: 1.2rem; margin: 0 0 0.5rem; color: var(--accent); }
+        p { margin-bottom: 0.9rem; color: #cbd5e1; }
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 1.5rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.35rem;
         }
         .alerta-defender {
             background: rgba(245, 158, 11, 0.08);
@@ -148,19 +188,39 @@
             padding: 1.5rem;
             margin: 1.5rem 0;
         }
-        .alerta-defender h3 { color: var(--warn); margin-top: 0; }
+        .alerta-defender h3 { color: var(--warn); margin: 1rem 0 0.4rem; }
+        .alerta-defender h3:first-child { margin-top: 0; }
         ol, ul { margin-left: 1.4rem; margin-bottom: 1rem; color: #cbd5e1; }
-        li { margin-bottom: 0.5rem; }
+        li { margin-bottom: 0.45rem; }
+
+        .code-wrap {
+            position: relative;
+            margin: 0.75rem 0 1rem;
+        }
+        .copy-code-btn {
+            position: absolute;
+            top: 0.55rem;
+            right: 0.55rem;
+            background: var(--surface-2);
+            color: var(--accent-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .copy-code-btn:hover { border-color: var(--accent-2); }
         pre {
             background: #050811;
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1.1rem;
+            padding: 1rem 1.1rem;
             overflow-x: auto;
             font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             color: #e2e8f0;
-            margin: 0.8rem 0 1.2rem;
+            margin: 0;
         }
         code {
             background: var(--surface-2);
@@ -168,13 +228,29 @@
             border-radius: 5px;
             font-family: Consolas, monospace;
             color: var(--accent-2);
+            font-size: 0.9em;
         }
-        pre code { background: transparent; padding: 0; color: inherit; }
+        pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
+
         .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.25rem;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.92rem;
+        }
+        th, td {
+            padding: 0.7rem 0.85rem;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        th { color: var(--accent); background: var(--surface-2); }
+        td { color: #cbd5e1; }
+
         footer {
             text-align: center;
             padding: 2rem;
@@ -186,12 +262,27 @@
 </head>
 <body>
 
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-brand">ESP 2.0.0</a>
+        <ul class="nav-links">
+            <li><a href="#instalacion">Instalación</a></li>
+            <li><a href="#cli">CLI y Compilación</a></li>
+            <li><a href="#fundamentos">Fundamentos</a></li>
+            <li><a href="#poo">Clases y Errores</a></li>
+            <li><a href="#sql">SQL Nativo</a></li>
+            <li><a href="#web">Web Nativa</a></li>
+            <li><a href="#modulos">Módulos</a></li>
+        </ul>
+    </div>
+</nav>
+
 <header>
     <span class="badge">VERSIÓN ESTABLE 2.0.0 • COMPILADOR NATIVO AOT + WEB + SQL</span>
     <h1>Lenguaje de Programación ESP 2.0.0</h1>
     <p class="lead">
         Escribe software de alto rendimiento, páginas web completas, bases de datos SQL,
-        herramientas de ciberseguridad y kernels x86 con sintaxis 100% nativa en español.
+        herramientas de red/ciberseguridad, gráficos 2D/3D y tus propios lenguajes con sintaxis en español.
     </p>
     <div class="cta-group">
         <a href="https://github.com/rafa247/web_esp/releases/download/v2.0.0/esp.exe"
@@ -216,125 +307,262 @@
 
 <main>
     <section id="instalacion">
-        <h2>1. Instalación Rápida y Registro Automático en el PATH</h2>
+        <h2>1. Instalación y Registro Automático en el PATH</h2>
         <div class="card">
             <p>
-                El binario oficial <strong>esp.exe</strong> (v2.0.0) incluye el intérprete, compilador nativo y todos los módulos listos para usarse sin dependencias externas:
+                El binario <strong>esp.exe</strong> (v2.0.0) incluye intérprete interactivo (REPL), compilador nativo AOT y toda la librería estándar en un solo ejecutable:
             </p>
             <ol>
-                <li>Descarga el ejecutable haciendo clic en el botón superior <strong>Descargar ESP v2.0.0 (Windows 64-bit)</strong>.</li>
-                <li>Mueve <code>esp.exe</code> a una carpeta permanente (por ejemplo, <code>C:\ESP\esp.exe</code> o <code>C:\Program Files\ESP\esp.exe</code>).</li>
-                <li>La primera vez que ejecutas <code>esp.exe</code>, el propio binario verifica su ubicación física y se auto-registra en el <code>PATH</code> de tu usuario para que puedas ejecutar <code>esp archivo.esp</code> desde cualquier carpeta.</li>
+                <li>Descarga <code>esp.exe</code> desde el botón superior.</li>
+                <li>Guárdalo en una carpeta permanente, por ejemplo <code>C:\ESP\esp.exe</code>.</li>
+                <li>Al ejecutarlo por primera vez, verifica su ruta y se registra en el <code>PATH</code> de usuario para poder invocarse como <code>esp</code> desde cualquier directorio.</li>
             </ol>
-            <p>Abre una terminal nueva (PowerShell o CMD) y comprueba la instalación (y su hash SHA-256 si deseas verificar integridad):</p>
-            <pre><code>esp version
+            <div class="code-wrap">
+                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                <pre><code>esp version
 esp ruta
 Get-FileHash "$HOME\Downloads\esp.exe" -Algorithm SHA256</code></pre>
+            </div>
         </div>
 
         <div class="alerta-defender" id="guia-defender">
             <h3>🛡 ¿Qué hacer si Windows Defender o SmartScreen bloquea el ejecutable?</h3>
             <p>
-                Como <strong>ESP 2.0.0</strong> es un proyecto independiente recién compilado y no cuenta con un certificado comercial de pago de Microsoft, <strong>Windows Defender SmartScreen</strong> puede mostrar una pantalla azul con el mensaje <em>"Windows protegió su PC"</em> o bloquear la descarga en el navegador.
+                Como <strong>ESP 2.0.0</strong> es un proyecto independiente sin certificado comercial de pago de Microsoft, SmartScreen o Windows Defender pueden mostrar una advertencia inicial.
             </p>
-
-            <h3>Opción A: Permitir desde la ventana de Windows SmartScreen (Recomendado)</h3>
+            <h3>Opción A: Permitir en Windows SmartScreen</h3>
             <ol>
-                <li>Cuando aparezca la ventana azul <strong>"Windows protegió su PC"</strong>, haz clic en el enlace subrayado <strong><u>Más información</u></strong> (situado debajo del texto de advertencia).</li>
-                <li>Aparecerá el botón <strong>Ejecutar de todas formas</strong> en la parte inferior derecha. Haz clic en él para iniciar <code>esp.exe</code> normalmente.</li>
+                <li>En la ventana <strong>"Windows protegió su PC"</strong>, haz clic en <strong>Más información</strong>.</li>
+                <li>Pulsa <strong>Ejecutar de todas formas</strong> para abrir <code>esp.exe</code>.</li>
             </ol>
-
-            <h3>Opción B: Desbloquear el archivo desde Propiedades o PowerShell</h3>
+            <h3>Opción B: Desbloquear desde PowerShell o Propiedades</h3>
+            <div class="code-wrap">
+                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                <pre><code>Unblock-File -Path "$HOME\Downloads\esp.exe"</code></pre>
+            </div>
+            <h3>Opción C: Restaurar o excluir en Seguridad de Windows</h3>
             <ol>
-                <li>Haz clic derecho sobre <code>esp.exe</code> y selecciona <strong>Propiedades</strong>.</li>
-                <li>En la pestaña <strong>General</strong> (abajo a la derecha), marca la casilla <strong>Desbloquear</strong> y pulsa <strong>Aceptar</strong>.</li>
-                <li>O bien ejecuta este comando en PowerShell para quitar la marca de descarga de Internet:</li>
-            </ol>
-            <pre><code>Unblock-File -Path "$HOME\Downloads\esp.exe"</code></pre>
-
-            <h3>Opción C: Si Antivirus de Windows Defender lo pone en cuarentena</h3>
-            <ol>
-                <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong>.</li>
-                <li>Selecciona el evento reciente de <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
-                <li>Para evitar futuras alertas al compilar tus propios <code>.exe</code> con <code>esp compilar</code>, añade tu carpeta de instalación (<code>C:\ESP</code>) en <strong>Administrar la configuración</strong> → <strong>Exclusiones</strong>.</li>
+                <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong> y restaura <code>esp.exe</code> si fue puesto en cuarentena.</li>
+                <li>Agrega tu carpeta de trabajo o de compilación (por ejemplo <code>C:\ESP</code>) en <strong>Exclusiones</strong> para evitar avisos al generar tus propios <code>.exe</code>.</li>
             </ol>
         </div>
     </section>
 
-    <section id="primeros-pasos">
-        <h2>2. Primeros Pasos y Comandos Principales</h2>
+    <section id="cli">
+        <h2>2. CLI, Compilación Nativa y Subcomandos</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>esp</code></td><td>Inicia la consola interactiva (REPL).</td></tr>
+                    <tr><td><code>esp archivo.esp</code></td><td>Ejecuta un script en ESP 2.0.0.</td></tr>
+                    <tr><td><code>esp compilar prog.esp -o prog.exe -O3</code></td><td>Compila a binario nativo (<code>exe</code>, <code>dll</code>, <code>so</code>, <code>dylib</code>, <code>estatica</code>, <code>ll</code>, <code>cpp</code>).</td></tr>
+                    <tr><td><code>esp verificar prog.esp</code></td><td>Valida la sintaxis sin ejecutar el programa.</td></tr>
+                    <tr><td><code>esp formatear prog.esp</code></td><td>Formatea e indenta automáticamente un archivo <code>.esp</code>.</td></tr>
+                    <tr><td><code>esp instalar paquete --sha256 &lt;hash&gt;</code></td><td>Descarga e instala un paquete verificando su firma SHA-256.</td></tr>
+                    <tr><td><code>esp nodo escuchar --puerto 9500</code></td><td>Levanta un nodo de red para ejecución remota en clúster.</td></tr>
+                    <tr><td><code>esp lsp</code></td><td>Inicia el servidor de lenguaje (LSP) por entrada/salida estándar.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="fundamentos">
+        <h2>3. Fundamentos: Variables, Bucles y Funciones</h2>
         <div class="grid-2">
             <div class="card">
-                <h3>Ejecutar un archivo .esp</h3>
-                <p>Crea un archivo <code>hola.esp</code> y ejecútalo directamente desde cualquier carpeta:</p>
-                <pre><code>mostrar("¡Hola desde ESP 2.0.0!")</code></pre>
-                <pre><code>esp hola.esp</code></pre>
+                <h3>Variables, Listas y Mapas</h3>
+                <p>Las listas en ESP admiten indexación base 1 (y 0 para el primer elemento), y los mapas almacenan pares clave-valor.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>variable nombre = "ESP 2.0.0"
+constante MAX_REINTENTOS = 3
+
+variable lenguajes = ["C++", "Rust", "ESP"]
+agregar(lenguajes, "SQL")
+
+variable ficha = {
+    proyecto: nombre,
+    version: 2,
+    activo: verdadero
+}
+
+mostrar(lenguajes[3])
+mostrar(ficha.proyecto)
+mostrar("Total: " + texto(longitud(lenguajes)))</code></pre>
+                </div>
             </div>
+
             <div class="card">
-                <h3>Compilar a Ejecutable Nativo (.exe)</h3>
-                <p>Convierte tu código ESP en un binario nativo independiente optimizado con <code>-O3</code>:</p>
-                <pre><code>esp compilar hola.esp -o hola.exe -O3
-.\hola.exe</code></pre>
+                <h3>Condicionales, Bucles y Funciones</h3>
+                <p>Usa <code>si</code> / <code>si_no_si</code> / <code>sino</code>, rangos con <code>para i = 1 hasta 5 paso 1</code> o iteración con <code>para x en lista</code>.</p>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>funcion sumar(a, b = 10)
+    devolver a + b
+fin
+
+para i = 1 hasta 5
+    si i % 2 == 0 y i &gt;= 2
+        mostrar(texto(i) + " -> " + texto(sumar(i)))
+    sino
+        mostrar(texto(i) + " -> impar")
+    fin
+fin</code></pre>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="referencia">
-        <h2>3. Referencia Rápida del Lenguaje</h2>
-
+    <section id="poo">
+        <h2>4. Clases, Herencia y Manejo de Errores</h2>
         <div class="card">
-            <h3>Variables, Clases y Herencia</h3>
-            <pre><code>clase Persona
-    publico variable nombre = ""
-    publico funcion iniciar(n)
-        este.nombre = n
+            <p>Las clases soportan <code>hereda</code>, propiedades y métodos con visibilidad <code>publico</code> o <code>privado</code>, constructor <code>iniciar</code> y bloques <code>intenta</code> / <code>si_no_puede</code>.</p>
+            <div class="code-wrap">
+                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                <pre><code>clase Cuenta
+    publico variable titular = ""
+    privado variable saldo = 0
+
+    publico funcion iniciar(titular, saldo_inicial)
+        este.titular = titular
+        este.saldo = saldo_inicial
     fin
-    publico funcion saludar()
-        mostrar("Hola, soy " + este.nombre)
+
+    publico funcion depositar(monto)
+        si monto &lt;= 0
+            afirmar(falso, "El monto debe ser positivo")
+        fin
+        este.saldo = este.saldo + monto
+        devolver este.saldo
     fin
 fin
 
-variable p = Persona("Alejandro")
-p.saludar()</code></pre>
+clase CuentaVIP hereda Cuenta
+    publico funcion bono()
+        devolver este.depositar(50)
+    fin
+fin
+
+intenta
+    variable c = CuentaVIP("Rafa", 100)
+    mostrar("Saldo final: " + texto(c.bono()))
+si_no_puede err
+    mostrar("Error controlado: " + err)
+fin</code></pre>
+            </div>
         </div>
+    </section>
 
+    <section id="sql">
+        <h2>5. Base de Datos SQL Nativa</h2>
         <div class="card">
-            <h3>Base de Datos SQL Nativa en Español</h3>
-            <pre><code>base_datos "empresa.db"
-crear_tabla usuarios(id, nombre, rol)
-insertar_en usuarios(id, nombre, rol) valores (1, "Ana", "admin")
+            <p>ESP 2.0.0 incluye sentencias nativas de base de datos en español (<code>base_datos</code>, <code>crear_tabla</code>, <code>insertar_en</code>, <code>seleccionar</code>, <code>actualizar</code>, <code>eliminar_de</code>) y persistencia en disco.</p>
+            <div class="code-wrap">
+                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                <pre><code>base_datos "tienda.db"
+crear_tabla productos(id, nombre, precio, stock)
 
-variable admins = seleccionar * de usuarios donde rol = "admin" ordenar_por id desc
-mostrar(admins[1].nombre)</code></pre>
+insertar_en productos(id, nombre, precio, stock) valores (1, "Teclado", 45, 12)
+insertar_en productos(id, nombre, precio, stock) valores (2, "Mouse", 25, 30)
+
+actualizar productos poner precio = 29 donde id = 2
+
+variable baratos = seleccionar nombre, precio de productos donde precio &lt;= 50 ordenar_por precio asc limite 5
+para item en baratos
+    mostrar(item.nombre + ": $" + item.precio)
+fin
+
+eliminar_de productos donde id = 1</code></pre>
+            </div>
         </div>
+    </section>
 
+    <section id="web">
+        <h2>6. Desarrollo Web Nativo (HTML5 + CSS3 + JS)</h2>
         <div class="card">
-            <h3>Desarrollo Web Nativo (HTML5 + CSS3 + JS)</h3>
-            <pre><code>pagina "Mi App ESP"
+            <p>Declara páginas con <code>pagina</code>, estilos con <code>estilo</code>, elementos como <code>encabezado</code>, <code>parrafo</code>, <code>entrada</code>, <code>enlace</code>, <code>imagen</code>, <code>contenedor</code> y eventos <code>al_clic</code>, y expórtalos con <code>guardar_web</code> o <code>html_web()</code>.</p>
+            <div class="code-wrap">
+                <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                <pre><code>pagina "Panel ESP 2.0.0"
     estilo body
         fondo = "#0b1020"
-        color_texto = "#ffffff"
+        color_texto = "#edf2ff"
     fin
 
-    encabezado "Bienvenido a ESP Web"
-    boton "Probar Alerta" al_clic
-        alerta("¡Funciona en el navegador!")
+    contenedor "tarjeta"
+        encabezado "Hola desde ESP Web"
+        parrafo "Generado directamente en Español sin plantillas externas."
+        entrada "correo"
+        boton "Saludar" al_clic
+            alerta("¡Botón ejecutado!")
+        fin
+    fin
+
+    script
+        consola("Página lista en el navegador")
     fin
 fin
 
-guardar_web("index.html")</code></pre>
+guardar_web("salida.html")
+mostrar("HTML generado con éxito")</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="modulos">
+        <h2>7. Módulos Estándar con <code>conseguir</code></h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3><code>re</code> y <code>cripto</code></h3>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>conseguir re
+conseguir cripto
+
+variable m = re.buscar("[0-9]+", "Puerto: 8080")
+mostrar(m.texto)
+
+variable hash = cripto.sha256("clave-secreta")
+mostrar(hash)
+mostrar(cripto.uuid_v4())</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><code>redes.ip</code>, <code>binario</code> y <code>lenguajes</code></h3>
+                <div class="code-wrap">
+                    <button type="button" class="copy-code-btn" onclick="copiarBloque(this)">Copiar</button>
+                    <pre><code>conseguir redes.ip
+conseguir binario
+conseguir lenguajes
+
+variable red = redes.ip.red("192.168.1.0/24")
+mostrar("Broadcast: " + red.broadcast)
+
+variable pack = binario.empaquetar("&gt;BH", 1, 8080)
+mostrar(binario.a_hex(pack))
+
+variable mini = lenguajes.crear("Mini")
+lenguajes.mostrar.nombre(mini, "decir")
+lenguajes.ejecutar(mini, 'decir("Hola desde Mini")')</code></pre>
+                </div>
+            </div>
         </div>
 
         <div class="card">
-            <h3>Módulos Estándar Incluidos</h3>
+            <h3>Otros Módulos Disponibles</h3>
             <ul>
-                <li><code>conseguir re</code> — Expresiones regulares (<code>coincide</code>, <code>buscar</code>, <code>encontrar_todos</code>, <code>reemplazar</code>).</li>
-                <li><code>conseguir binario</code> — Empaquetado binario estilo <code>struct</code>, XOR y entropía de Shannon.</li>
-                <li><code>conseguir cripto</code> — SHA-256, HMAC-SHA256, cifrado AES y generación de UUIDv4.</li>
-                <li><code>conseguir redes.ip</code> — Cálculo de subredes CIDR y escaneo paralelo de puertos.</li>
-                <li><code>conseguir websockets</code> — Servidor WebSocket RFC 6455 en tiempo real (<code>ws://</code>).</li>
-                <li><code>conseguir os</code> — Gestión de memoria cruda y generación de sectores de arranque x86.</li>
-                <li><code>conseguir lenguajes</code> — Creación de tus propios lenguajes de programación encima de ESP.</li>
+                <li><code>archivos</code>, <code>rutas</code> y <code>os</code> — Lectura/escritura de archivos, rutas, variables de entorno, procesos y memoria virtual.</li>
+                <li><code>redes.sockets</code>, <code>redes.http</code>, <code>redes.dns</code>, <code>servidor</code> y <code>websockets</code> — Sockets TCP/UDP, peticiones HTTP, resolución DNS, servidor HTTP y WebSockets RFC 6455.</li>
+                <li><code>matematicas</code>, <code>aleatorio</code>, <code>estadistica</code>, <code>tensores</code> y <code>hilos</code> — Funciones matemáticas, números aleatorios, multiplicación de matrices y ejecución paralela.</li>
+                <li><code>json</code>, <code>csv</code> y <code>base64</code> — Serialización/deserialización JSON, manejo de CSV y codificación Base64.</li>
+                <li><code>motor2d</code>, <code>motor3d</code>, <code>gui</code>, <code>audio</code>, <code>forense</code> y <code>ast</code> — Renderizado 2D/3D por software, controles Win32 GUI, audio, análisis de binarios e introspección del AST.</li>
             </ul>
         </div>
     </section>
@@ -343,6 +571,17 @@ guardar_web("index.html")</code></pre>
 <footer>
     ESP 2.0.0 — Lenguaje de Programación Nativo en Español • Todos los derechos reservados
 </footer>
+
+<script>
+function copiarBloque(btn) {
+    const pre = btn.parentElement.querySelector("pre");
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.innerText);
+    const original = btn.innerText;
+    btn.innerText = "¡Copiado!";
+    setTimeout(() => { btn.innerText = original; }, 1500);
+}
+</script>
 
 </body>
 </html>
