@@ -1,172 +1,307 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101522">
-  <meta name="description" content="Documentación oficial, módulos y registro comunitario del lenguaje ESP.">
-  <title>ESP — Lenguaje y módulos</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP 2.0.0 — Lenguaje de Programación Nativo en Español</title>
+    <style>
+        :root {
+            --bg: #080c17;
+            --surface: #111827;
+            --surface-2: #1a2336;
+            --accent: #38bdf8;
+            --accent-2: #2dd4bf;
+            --warn: #f59e0b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --border: #263248;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.65;
+        }
+        header {
+            background: radial-gradient(circle at top, #132347 0%, var(--bg) 70%);
+            border-bottom: 1px solid var(--border);
+            padding: 4.5rem 1.5rem 3.5rem;
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+        .lead {
+            max-width: 720px;
+            margin: 0 auto 2rem;
+            color: var(--muted);
+            font-size: 1.15rem;
+        }
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-descarga {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+            color: #04101d;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(45, 212, 191, 0.25);
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .btn-descarga:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px rgba(45, 212, 191, 0.38);
+        }
+        .btn-secundario {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+        }
+        .btn-secundario:hover { border-color: var(--accent); }
+        main {
+            max-width: 1020px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+        section { margin-bottom: 3.5rem; }
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        h3 { font-size: 1.2rem; margin: 1.4rem 0 0.5rem; color: var(--accent); }
+        p { margin-bottom: 1rem; color: #cbd5e1; }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .alerta-defender {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            border-left: 5px solid var(--warn);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .alerta-defender h3 { color: var(--warn); margin-top: 0; }
+        ol, ul { margin-left: 1.4rem; margin-bottom: 1rem; color: #cbd5e1; }
+        li { margin-bottom: 0.5rem; }
+        pre {
+            background: #050811;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem;
+            overflow-x: auto;
+            font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+            font-size: 0.92rem;
+            color: #e2e8f0;
+            margin: 0.8rem 0 1.2rem;
+        }
+        code {
+            background: var(--surface-2);
+            padding: 0.15rem 0.45rem;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            color: var(--accent-2);
+        }
+        pre code { background: transparent; padding: 0; color: inherit; }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 1.25rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-  <a class="skip-link" href="#contenido">Saltar al contenido</a>
-  <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="ESP, inicio">
-      <span class="brand-mark">E</span>
-      <span>ESP<span class="brand-dot">.</span></span>
-    </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menú</button>
-    <nav id="site-nav" class="site-nav" aria-label="Navegación principal">
-      <a href="#lenguaje">Lenguaje</a>
-      <a href="#modulos">Módulos</a>
-      <a href="#registro">Registro</a>
-      <a class="nav-cta" href="#publicar">Publicar un módulo</a>
-    </nav>
-  </header>
 
-  <main id="contenido">
-    <section id="inicio" class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot"></span> ESP 2.0.0 · Referencia del lenguaje</p>
-        <h1>Un lenguaje claro.<br><span>Un ecosistema abierto.</span></h1>
-        <p class="hero-lead">Explora la sintaxis de ESP, consulta la biblioteca estándar y descubre módulos compartidos por la comunidad.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#lenguaje">Explorar el lenguaje <span aria-hidden="true">→</span></a>
-          <a class="button button-quiet" href="#modulos">Ver módulos</a>
+<header>
+    <span class="badge">VERSIÓN ESTABLE 2.0.0 • COMPILADOR NATIVO AOT + WEB + SQL</span>
+    <h1>Lenguaje de Programación ESP 2.0.0</h1>
+    <p class="lead">
+        Escribe software de alto rendimiento, páginas web completas, bases de datos SQL,
+        herramientas de ciberseguridad y kernels x86 con sintaxis 100% nativa en español.
+    </p>
+    <div class="cta-group">
+        <a href="descargas/ESP-2.0.0-win64.exe" class="btn-descarga" download>
+            ⬇ Descargar Instalador ESP v2.0.0 (Windows 64-bit)
+        </a>
+        <a href="#guia-defender" class="btn-secundario">
+            🛡 ¿Windows Defender lo bloquea? Ver guía
+        </a>
+    </div>
+</header>
+
+<main>
+    <section id="instalacion">
+        <h2>1. Instalación Rápida y Registro Automático en el PATH</h2>
+        <div class="card">
+            <p>
+                El instalador oficial <strong>ESP-2.0.0-win64.exe</strong> realiza toda la configuración por ti en menos de 10 segundos:
+            </p>
+            <ol>
+                <li>Descarga el instalador haciendo clic en el botón superior <strong>Descargar Instalador ESP v2.0.0</strong>.</li>
+                <li>Ejecuta <code>ESP-2.0.0-win64.exe</code> y sigue el asistente (asegúrate de dejar marcada la opción <strong>"Agregar ESP al PATH del sistema"</strong>).</li>
+                <li>Adicionalmente, la primera vez que ejecutas <code>esp</code>, el propio binario verifica su ubicación física y se auto-registra en el <code>PATH</code> de tu usuario para que puedas ejecutar <code>esp archivo.esp</code> desde cualquier carpeta.</li>
+            </ol>
+            <p>Abre una terminal nueva (PowerShell o CMD) y comprueba la instalación:</p>
+            <pre><code>esp version
+esp ruta</code></pre>
         </div>
-      </div>
-      <div class="hero-code" aria-label="Ejemplo de programa ESP">
-        <div class="code-top"><span></span><span></span><span></span><span class="code-label">hola.esp</span></div>
-        <pre><code><span class="code-muted"># Tu primer programa</span>
-<span class="code-key">funcion</span> saludar(nombre)
-    <span class="code-key">mostrar</span>(<span class="code-string">"Hola, "</span> + nombre)
-<span class="code-key">fin</span>
 
-saludar(<span class="code-string">"mundo"</span>)</code></pre>
-      </div>
-      <div class="hero-orb hero-orb-one"></div>
-      <div class="hero-orb hero-orb-two"></div>
-    </section>
+        <div class="alerta-defender" id="guia-defender">
+            <h3>🛡 ¿Qué hacer si Windows Defender o SmartScreen bloquea el instalador?</h3>
+            <p>
+                Como <strong>ESP 2.0.0</strong> es un proyecto independiente recién compilado y no cuenta con un certificado comercial de pago de Microsoft, <strong>Windows Defender SmartScreen</strong> puede mostrar una pantalla azul con el mensaje <em>"Windows protegió su PC"</em> o bloquear la descarga en el navegador.
+            </p>
 
-    <section class="quick-facts" aria-label="Características">
-      <div><strong>.esp</strong><span>Extensión de fuente</span></div>
-      <div><strong>Español</strong><span>Sintaxis legible y accesible</span></div>
-      <div><strong>Abierto</strong><span>Módulos de la comunidad</span></div>
-    </section>
+            <h3>Opción A: Permitir desde la ventana de Windows SmartScreen (Recomendado)</h3>
+            <ol>
+                <li>Cuando aparezca la ventana azul <strong>"Windows protegió su PC"</strong>, haz clic en el enlace subrayado <strong><u>Más información</u></strong> (situado debajo del texto de advertencia).</li>
+                <li>Aparecerá el botón <strong>Ejecutar de todas formas</strong> en la parte inferior derecha. Haz clic en él para iniciar el instalador normalmente.</li>
+            </ol>
 
-    <section id="lenguaje" class="content-section">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Referencia rápida</p>
-          <h2>Palabras y conceptos</h2>
-          <p>Busca palabras clave, valores incorporados, operadores y funciones globales de ESP.</p>
+            <h3>Opción B: Desbloquear el archivo desde Propiedades o PowerShell</h3>
+            <ol>
+                <li>Haz clic derecho sobre <code>ESP-2.0.0-win64.exe</code> y selecciona <strong>Propiedades</strong>.</li>
+                <li>En la pestaña <strong>General</strong> (abajo a la derecha), marca la casilla <strong>Desbloquear</strong> y pulsa <strong>Aceptar</strong>.</li>
+                <li>O bien ejecuta este comando en PowerShell para quitar la marca de descarga de Internet:</li>
+            </ol>
+            <pre><code>Unblock-File -Path "$HOME\Downloads\ESP-2.0.0-win64.exe"</code></pre>
+
+            <h3>Opción C: Si Antivirus de Windows Defender lo pone en cuarentena</h3>
+            <ol>
+                <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong>.</li>
+                <li>Selecciona el evento reciente de <code>ESP-2.0.0-win64.exe</code> o <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
+                <li>Para evitar futuras alertas al compilar tus propios <code>.exe</code> con <code>esp compilar</code>, añade tu carpeta de instalación (<code>C:\Program Files\ESP</code>) en <strong>Administrar la configuración</strong> → <strong>Exclusiones</strong>.</li>
+            </ol>
         </div>
-        <label class="search-box">
-          <span class="sr-only">Buscar en la referencia del lenguaje</span>
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input id="language-search" type="search" placeholder="Buscar una palabra…" autocomplete="off">
-          <kbd>⌘ K</kbd>
-        </label>
-      </div>
-      <div id="keyword-groups" class="keyword-groups" aria-live="polite"></div>
     </section>
 
-    <section id="modulos" class="content-section section-tinted">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Biblioteca estándar</p>
-          <h2>Módulos para empezar</h2>
-          <p>Capacidades que puedes cargar con <code>conseguir</code>. Cada módulo incluye sus miembros públicos y ejemplos.</p>
+    <section id="primeros-pasos">
+        <h2>2. Primeros Pasos y Comandos Principales</h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>Ejecutar un archivo .esp</h3>
+                <p>Crea un archivo <code>hola.esp</code> y ejecútalo directamente desde cualquier carpeta:</p>
+                <pre><code>mostrar("¡Hola desde ESP 2.0.0!")</code></pre>
+                <pre><code>esp hola.esp</code></pre>
+            </div>
+            <div class="card">
+                <h3>Compilar a Ejecutable Nativo (.exe)</h3>
+                <p>Convierte tu código ESP en un binario nativo independiente optimizado con <code>-O3</code>:</p>
+                <pre><code>esp compilar hola.esp -o hola.exe -O3
+.\hola.exe</code></pre>
+            </div>
         </div>
-        <label class="search-box">
-          <span class="sr-only">Buscar módulos</span>
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input id="module-search" type="search" placeholder="Buscar un módulo…" autocomplete="off">
-        </label>
-      </div>
-      <div id="standard-modules" class="module-grid" aria-live="polite"></div>
-      <div id="registro" class="registry-heading">
-        <div>
-          <p class="eyebrow">Hechos por la comunidad</p>
-          <h3>Registro de módulos</h3>
+    </section>
+
+    <section id="referencia">
+        <h2>3. Referencia Rápida del Lenguaje</h2>
+
+        <div class="card">
+            <h3>Variables, Clases y Herencia</h3>
+            <pre><code>clase Persona
+    publico variable nombre = ""
+    publico funcion iniciar(n)
+        este.nombre = n
+    fin
+    publico funcion saludar()
+        mostrar("Hola, soy " + este.nombre)
+    fin
+fin
+
+variable p = Persona("Alejandro")
+p.saludar()</code></pre>
         </div>
-        <span id="registry-status" class="registry-status">Cargando registro…</span>
-      </div>
-      <div id="community-modules" class="module-grid" aria-live="polite"></div>
-      <p id="community-empty" class="empty-state" hidden>Aún no hay módulos comunitarios publicados.</p>
-    </section>
 
-    <section id="conseguir" class="content-section">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Usar módulos</p>
-          <h2>Primero local. Luego tú decides.</h2>
-          <p>ESP resuelve primero módulos estándar y locales; puede comprobar una versión exacta y cargar dependencias declaradas. Solo pide permiso antes de consultar el registro e instalar un módulo remoto.</p>
+        <div class="card">
+            <h3>Base de Datos SQL Nativa en Español</h3>
+            <pre><code>base_datos "empresa.db"
+crear_tabla usuarios(id, nombre, rol)
+insertar_en usuarios(id, nombre, rol) valores (1, "Ana", "admin")
+
+variable admins = seleccionar * de usuarios donde rol = "admin" ordenar_por id desc
+mostrar(admins[1].nombre)</code></pre>
         </div>
-      </div>
-      <div class="steps">
-        <article class="step-card"><span>01</span><h3>Busca en local</h3><p><code>conseguir nombre</code> intenta resolver primero módulos estándar, del proyecto y ya instalados.</p></article>
-        <article class="step-card"><span>02</span><h3>Solicita permiso</h3><p>Si no lo encuentra, ESP pregunta si quieres buscar e instalar el módulo comunitario.</p></article>
-        <article class="step-card"><span>03</span><h3>Instala si existe</h3><p>Solo tras tu confirmación se consulta el registro; si el paquete existe, se descarga a tu carpeta de ESP.</p></article>
-      </div>
-      <pre class="sample-block"><code>conseguir json
-conseguir mi_modulo "1.2.3"
-variable respuesta = mi_modulo.funcion_exportada()
 
-conseguir ip
-variable red_lan = ip.rango("192.168.1.10/24")
-mostrar(red_lan.red, red_lan.broadcast, red_lan.primera, red_lan.ultima)
+        <div class="card">
+            <h3>Desarrollo Web Nativo (HTML5 + CSS3 + JS)</h3>
+            <pre><code>pagina "Mi App ESP"
+    estilo body
+        fondo = "#0b1020"
+        color_texto = "#ffffff"
+    fin
 
-conseguir __herramientas__
-variable revision = __herramientas__.analizar("mostrar(1)")
-variable salida = __herramientas__.compilar("mostrar(1)", "programa.exe", "exe")</code></pre>
-      <p class="notice"><strong>Seguridad:</strong> un módulo ESP contiene código ejecutable. Revisa su documentación y fuente antes de autorizar su instalación.</p>
+    encabezado "Bienvenido a ESP Web"
+    boton "Probar Alerta" al_clic
+        alerta("¡Funciona en el navegador!")
+    fin
+fin
+
+guardar_web("index.html")</code></pre>
+        </div>
+
+        <div class="card">
+            <h3>Módulos Estándar Incluidos</h3>
+            <ul>
+                <li><code>conseguir re</code> — Expresiones regulares (<code>coincide</code>, <code>buscar</code>, <code>encontrar_todos</code>, <code>reemplazar</code>).</li>
+                <li><code>conseguir binario</code> — Empaquetado binario estilo <code>struct</code>, XOR y entropía de Shannon.</li>
+                <li><code>conseguir cripto</code> — SHA-256, HMAC-SHA256, cifrado AES y generación de UUIDv4.</li>
+                <li><code>conseguir redes.ip</code> — Cálculo de subredes CIDR y escaneo paralelo de puertos.</li>
+                <li><code>conseguir websockets</code> — Servidor WebSocket RFC 6455 en tiempo real (<code>ws://</code>).</li>
+                <li><code>conseguir os</code> — Gestión de memoria cruda y generación de sectores de arranque x86.</li>
+                <li><code>conseguir lenguajes</code> — Creación de tus propios lenguajes de programación encima de ESP.</li>
+            </ul>
+        </div>
     </section>
+</main>
 
-    <section id="publicar" class="content-section section-publish">
-      <div class="publish-copy">
-        <p class="eyebrow">Ecosistema abierto</p>
-        <h2>Comparte lo que construyes.</h2>
-        <p>Envía el módulo desde esta página: no necesitas instalar Git, usar una terminal ni tener una cuenta. Los envíos se publican automáticamente en el catálogo.</p>
-        <ol class="publish-steps">
-          <li>Escribe el nombre, una descripción y el código ESP público del módulo.</li>
-          <li>Completa la verificación antispam y pulsa <strong>Publicar módulo</strong>.</li>
-          <li>Espera a que termine el despliegue del catálogo y ya podrás instalarlo.</li>
-        </ol>
-        <p class="notice"><strong>Importante:</strong> la publicación es automática y no revisa la sintaxis. El código ESP es ejecutable: no incluyas contraseñas, tokens ni datos privados, y revisa el fuente antes de instalar módulos de otras personas.</p>
-      </div>
-      <form id="module-submit-form" class="publish-form">
-        <label for="module-name">Nombre del módulo</label>
-        <input id="module-name" name="name" type="text" required minlength="1" maxlength="64"
-          pattern="[A-Za-z0-9_-]+" autocomplete="off" placeholder="saludar"
-          aria-describedby="module-name-help">
-        <small id="module-name-help">Letras, números, guion y guion bajo.</small>
-        <label for="module-description">Descripción</label>
-        <input id="module-description" name="description" type="text" required minlength="8" maxlength="280"
-          placeholder="Funciones para saludar">
-        <label for="module-source">Código fuente ESP</label>
-        <textarea id="module-source" name="source" required rows="12" maxlength="1048576"
-          spellcheck="false" placeholder="publica funcion saludar()&#10;    mostrar(&quot;saludar&quot;)&#10;fin"></textarea>
-        <small>Máximo 1 MiB. El módulo quedará disponible para cualquier persona.</small>
-        <div id="module-turnstile" class="turnstile-widget" aria-label="Verificación antispam"></div>
-        <button id="module-submit-button" class="button button-primary" type="submit" disabled>Publicar módulo</button>
-        <p id="module-submit-status" class="form-status" role="status" aria-live="polite">
-          El formulario de publicación aún no está configurado.
-        </p>
-      </form>
-    </section>
+<footer>
+    ESP 2.0.0 — Lenguaje de Programación Nativo en Español • Todos los derechos reservados
+</footer>
 
-    <section class="closing-banner">
-      <div><p class="eyebrow">Empieza hoy</p><h2>Tu siguiente programa empieza con <code>.esp</code>.</h2></div>
-      <a class="button button-primary" href="#lenguaje">Consultar referencia <span aria-hidden="true">→</span></a>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <a class="brand" href="#inicio"><span class="brand-mark">E</span><span>ESP<span class="brand-dot">.</span></span></a>
-    <p>Una comunidad que construye con claridad.</p>
-    <span>ESP 2.0.0 · Sitio estático</span>
-  </footer>
 </body>
 </html>
