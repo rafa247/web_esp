@@ -17,7 +17,7 @@ jobs:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Organizar, compilar y empaquetar ESP
+      - name: Limpiar encabezados duplicados, compilar y empaquetar ESP
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
@@ -26,15 +26,25 @@ jobs:
           $allHpp = Get-ChildItem -Recurse -Filter "*.hpp"
 
           if ($allCpp.Count -eq 0) {
-            throw "No se encontro ningun archivo .cpp en tu repositorio de GitHub."
+            throw "No se encontro ningun archivo .cpp en tu repositorio."
           }
 
           New-Item -ItemType Directory -Force -Path "build\inc\esp", "build\src", "dist\ESP-2.0.0-win64" | Out-Null
 
+          # Limpiar posibles contenidos duplicados dentro de los .hpp y garantizar #pragma once
           foreach ($h in $allHpp) {
-            Copy-Item $h.FullName "build\inc\$($h.Name)" -Force
-            Copy-Item $h.FullName "build\inc\esp\$($h.Name)" -Force
+            $raw = Get-Content $h.FullName -Raw
+            $matchesPragma = [regex]::Matches($raw, '#pragma\s+once')
+            if ($matchesPragma.Count -gt 1) {
+              $raw = $raw.Substring(0, $matchesPragma[1].Index)
+            }
+            if ($raw -notmatch '^\s*#pragma\s+once') {
+              $raw = "#pragma once`n" + $raw
+            }
+            Set-Content -Encoding UTF8 -Path "build\inc\$($h.Name)" -Value $raw
+            Set-Content -Encoding UTF8 -Path "build\inc\esp\$($h.Name)" -Value $raw
           }
+
           foreach ($c in $allCpp) {
             Copy-Item $c.FullName "build\src\$($c.Name)" -Force
           }
