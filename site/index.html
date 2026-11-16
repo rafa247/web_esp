@@ -194,9 +194,9 @@
         herramientas de ciberseguridad y kernels x86 con sintaxis 100% nativa en español.
     </p>
     <div class="cta-group">
-        <a href="https://github.com/rafa247/web_esp/releases/download/v2.0.0/ESP-2.0.0-win64.zip"
+        <a href="https://github.com/rafa247/web_esp/releases/download/v2.0.0/esp.exe"
            class="btn-descarga"
-           download="ESP-2.0.0-win64.zip">
+           download="esp.exe">
             ⬇ Descargar ESP v2.0.0 (Windows 64-bit)
         </a>
         <a href="#guia-defender" class="btn-secundario">
@@ -219,17 +219,17 @@
         <h2>1. Instalación Rápida y Registro Automático en el PATH</h2>
         <div class="card">
             <p>
-                El paquete oficial <strong>ESP-2.0.0-win64.zip</strong> incluye el compilador nativo <code>esp.exe</code> listo para usarse en menos de 10 segundos:
+                El binario oficial <strong>esp.exe</strong> (v2.0.0) incluye el intérprete, compilador nativo y todos los módulos listos para usarse sin dependencias externas:
             </p>
             <ol>
-                <li>Descarga el archivo haciendo clic en el botón superior <strong>Descargar ESP v2.0.0 (Windows 64-bit)</strong>.</li>
-                <li>Extrae el contenido de <code>ESP-2.0.0-win64.zip</code> en una carpeta permanente (por ejemplo, <code>C:\ESP</code> o <code>C:\Program Files\ESP</code>).</li>
+                <li>Descarga el ejecutable haciendo clic en el botón superior <strong>Descargar ESP v2.0.0 (Windows 64-bit)</strong>.</li>
+                <li>Mueve <code>esp.exe</code> a una carpeta permanente (por ejemplo, <code>C:\ESP\esp.exe</code> o <code>C:\Program Files\ESP\esp.exe</code>).</li>
                 <li>La primera vez que ejecutas <code>esp.exe</code>, el propio binario verifica su ubicación física y se auto-registra en el <code>PATH</code> de tu usuario para que puedas ejecutar <code>esp archivo.esp</code> desde cualquier carpeta.</li>
             </ol>
             <p>Abre una terminal nueva (PowerShell o CMD) y comprueba la instalación (y su hash SHA-256 si deseas verificar integridad):</p>
             <pre><code>esp version
 esp ruta
-Get-FileHash "$HOME\Downloads\ESP-2.0.0-win64.zip" -Algorithm SHA256</code></pre>
+Get-FileHash "$HOME\Downloads\esp.exe" -Algorithm SHA256</code></pre>
         </div>
 
         <div class="alerta-defender" id="guia-defender">
@@ -246,17 +246,17 @@ Get-FileHash "$HOME\Downloads\ESP-2.0.0-win64.zip" -Algorithm SHA256</code></pre
 
             <h3>Opción B: Desbloquear el archivo desde Propiedades o PowerShell</h3>
             <ol>
-                <li>Haz clic derecho sobre <code>ESP-2.0.0-win64.zip</code> o <code>esp.exe</code> y selecciona <strong>Propiedades</strong>.</li>
+                <li>Haz clic derecho sobre <code>esp.exe</code> y selecciona <strong>Propiedades</strong>.</li>
                 <li>En la pestaña <strong>General</strong> (abajo a la derecha), marca la casilla <strong>Desbloquear</strong> y pulsa <strong>Aceptar</strong>.</li>
                 <li>O bien ejecuta este comando en PowerShell para quitar la marca de descarga de Internet:</li>
             </ol>
-            <pre><code>Unblock-File -Path "$HOME\Downloads\ESP-2.0.0-win64.zip"</code></pre>
+            <pre><code>Unblock-File -Path "$HOME\Downloads\esp.exe"</code></pre>
 
             <h3>Opción C: Si Antivirus de Windows Defender lo pone en cuarentena</h3>
             <ol>
                 <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong>.</li>
-                <li>Selecciona el evento reciente de <code>ESP-2.0.0-win64.zip</code> o <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
-                <li>Para evitar futuras alertas al compilar tus propios <code>.exe</code> con <code>esp compilar</code>, añade tu carpeta de instalación (<code>C:\Program Files\ESP</code>) en <strong>Administrar la configuración</strong> → <strong>Exclusiones</strong>.</li>
+                <li>Selecciona el evento reciente de <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
+                <li>Para evitar futuras alertas al compilar tus propios <code>.exe</code> con <code>esp compilar</code>, añade tu carpeta de instalación (<code>C:\ESP</code>) en <strong>Administrar la configuración</strong> → <strong>Exclusiones</strong>.</li>
             </ol>
         </div>
     </section>
