@@ -17,14 +17,13 @@ jobs:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Corregir conflictos de cabeceras, compilar y empaquetar
+      - name: Normalizar cabeceras, compilar y empaquetar
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
 
           New-Item -ItemType Directory -Force -Path "build\include\esp", "build\src", "dist\ESP-2.0.0-win64" | Out-Null
 
-          # Copiar cabeceras y fuentes a una carpeta limpia de compilacion
           Get-ChildItem -Recurse -Filter "*.hpp" | ForEach-Object {
             Copy-Item $_.FullName "build\include\esp\$($_.Name)" -Force
             Copy-Item $_.FullName "build\include\$($_.Name)" -Force
@@ -33,7 +32,7 @@ jobs:
             Copy-Item $_.FullName "build\src\$($_.Name)" -Force
           }
 
-          # 1. Cortar ast.hpp justo antes de la segunda definicion duplicada (linea ~415)
+          # 1. Truncar ast.hpp antes de su segunda copia duplicada
           $astLines = Get-Content "build\include\esp\ast.hpp"
           $seenTipoNodo = $false
           $cleanAst = @()
@@ -47,26 +46,34 @@ jobs:
           Set-Content -Encoding UTF8 -Path "build\include\esp\ast.hpp" -Value $cleanAst
           Set-Content -Encoding UTF8 -Path "build\include\ast.hpp" -Value $cleanAst
 
-          # 2. Evitar choque entre comun.hpp y lexer.hpp y asegurar pos_ en Lexer
+          # 2. En comun.hpp: conservar Ubicacion y todo el resto, pero eliminar TipoToken y Token duplicados
           if ((Test-Path "build\include\esp\comun.hpp") -and (Test-Path "build\include\esp\lexer.hpp")) {
+            $comunRaw = Get-Content "build\include\esp\comun.hpp" -Raw
+            $comunRaw = [regex]::Replace($comunRaw, '(?s)enum\s+class\s+TipoToken\s*\{.*?\};', '')
+            $comunRaw = [regex]::Replace($comunRaw, '(?s)struct\s+Token\s*\{.*?\};', '')
+            if ($comunRaw -notmatch 'struct\s+Ubicacion') {
+              $ubiDef = 'struct Ubicacion { std::string archivo; size_t linea = 1; size_t columna = 1; };' + "`n"
+              $comunRaw = $comunRaw -replace '(namespace\s+esp\s*\{)', "`$1`n$ubiDef"
+            }
+            Set-Content -Encoding UTF8 -Path "build\include\esp\comun.hpp" -Value $comunRaw
+            Set-Content -Encoding UTF8 -Path "build\include\comun.hpp" -Value $comunRaw
+
+            # Asegurar pos_ y KwFuncion en lexer.hpp
             $lexText = Get-Content "build\include\esp\lexer.hpp" -Raw
-            if ($lexText -match 'enum class TipoToken') {
-              # Eliminar enum class TipoToken y struct Token duplicados de comun.hpp
-              $comunClean = '#pragma once' + "`n" + '#include <string>' + "`n" + '#include <vector>' + "`n" + '#include <memory>' + "`n" + '#include <stdexcept>' + "`n" + '#include "esp/lexer.hpp"' + "`n"
-              Set-Content -Encoding UTF8 -Path "build\include\esp\comun.hpp" -Value $comunClean
-              Set-Content -Encoding UTF8 -Path "build\include\comun.hpp" -Value $comunClean
+            if ($lexText -notmatch 'KwFuncion') {
+              $lexText = $lexText -replace '(enum\s+class\s+TipoToken\s*\{)', "`$1`n    KwFuncion,"
             }
             if ($lexText -notmatch 'pos_') {
               $lexText = $lexText -replace '(size_t\s+indice_\s*=\s*0;)', '$1 size_t pos_ = 0;'
               if ($lexText -notmatch 'pos_') {
                 $lexText = $lexText -replace '(std::string\s+fuente_;)', '$1 size_t pos_ = 0;'
               }
-              Set-Content -Encoding UTF8 -Path "build\include\esp\lexer.hpp" -Value $lexText
-              Set-Content -Encoding UTF8 -Path "build\include\lexer.hpp" -Value $lexText
             }
+            Set-Content -Encoding UTF8 -Path "build\include\esp\lexer.hpp" -Value $lexText
+            Set-Content -Encoding UTF8 -Path "build\include\lexer.hpp" -Value $lexText
           }
 
-          # 3. Alinear main.cpp con ejecutar_cli(int argc, char** argv)
+          # 3. Alinear llamada en main.cpp
           if (Test-Path "build\src\main.cpp") {
             $mainText = Get-Content "build\src\main.cpp" -Raw
             $mainText = $mainText -replace 'return\s+esp::ejecutar_cli\s*\(\s*args\s*\)\s*;', 'return esp::ejecutar_cli(argc, argv);'
