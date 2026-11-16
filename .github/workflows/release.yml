@@ -17,70 +17,42 @@ jobs:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Limpiar encabezados duplicados, compilar y empaquetar ESP
+      - name: Organizar carpetas originales y compilar
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
 
-          $allCpp = Get-ChildItem -Recurse -Filter "*.cpp" | Where-Object { $_.Name -notmatch '^test_' }
-          $allHpp = Get-ChildItem -Recurse -Filter "*.hpp"
+          # Detectar si los archivos estan en carpetas o sueltos en la raiz
+          $incDir = Get-ChildItem -Directory -Recurse -Filter "include" | Select-Object -First 1
+          $srcDir = Get-ChildItem -Directory -Recurse -Filter "src" | Select-Object -First 1
 
-          if ($allCpp.Count -eq 0) {
-            throw "No se encontro ningun archivo .cpp en tu repositorio."
-          }
-
-          New-Item -ItemType Directory -Force -Path "build\inc\esp", "build\src", "dist\ESP-2.0.0-win64" | Out-Null
-
-          # Limpiar posibles contenidos duplicados dentro de los .hpp y garantizar #pragma once
-          foreach ($h in $allHpp) {
-            $raw = Get-Content $h.FullName -Raw
-            $matchesPragma = [regex]::Matches($raw, '#pragma\s+once')
-            if ($matchesPragma.Count -gt 1) {
-              $raw = $raw.Substring(0, $matchesPragma[1].Index)
+          if ($incDir -and $srcDir) {
+            $I_FLAG = $incDir.FullName
+            $CPP_FILES = Get-ChildItem "$($srcDir.FullName)\*.cpp" | Where-Object { $_.Name -notmatch '^test_' } | ForEach-Object { $_.FullName }
+          } else {
+            # Si se subieron sueltos a la raiz, reconstruir include/esp y src sin alterar el contenido
+            New-Item -ItemType Directory -Force -Path "build\include\esp", "build\src" | Out-Null
+            Get-ChildItem -Filter "*.hpp" | ForEach-Object {
+              Copy-Item $_.FullName "build\include\esp\$($_.Name)" -Force
+              Copy-Item $_.FullName "build\include\$($_.Name)" -Force
             }
-            if ($raw -notmatch '^\s*#pragma\s+once') {
-              $raw = "#pragma once`n" + $raw
+            Get-ChildItem -Filter "*.cpp" | Where-Object { $_.Name -notmatch '^test_' } | ForEach-Object {
+              Copy-Item $_.FullName "build\src\$($_.Name)" -Force
             }
-            Set-Content -Encoding UTF8 -Path "build\inc\$($h.Name)" -Value $raw
-            Set-Content -Encoding UTF8 -Path "build\inc\esp\$($h.Name)" -Value $raw
+            $I_FLAG = "build\include"
+            $CPP_FILES = Get-ChildItem "build\src\*.cpp" | ForEach-Object { $_.FullName }
           }
 
-          foreach ($c in $allCpp) {
-            Copy-Item $c.FullName "build\src\$($c.Name)" -Force
-          }
+          New-Item -ItemType Directory -Force -Path "build", "dist\ESP-2.0.0-win64" | Out-Null
 
-          if (-not (Test-Path "build\inc\esp\regex_mod.hpp")) {
-            $hppCode = '#pragma once' + "`n" + '#include "valor.hpp"' + "`n" + '#include <memory>' + "`n" + '#include <string>' + "`n" + 'namespace esp { std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias = "re"); }'
-            Set-Content -Encoding UTF8 -Path "build\inc\esp\regex_mod.hpp" -Value $hppCode
-            Copy-Item "build\inc\esp\regex_mod.hpp" "build\inc\regex_mod.hpp" -Force
-          }
-
-          if (-not (Test-Path "build\src\regex_mod.cpp")) {
-            $cppCode = '#include "esp/regex_mod.hpp"' + "`n" + '#include "esp/runtime.hpp"' + "`n" + 'namespace esp { std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias) { auto m = std::make_shared<Modulo>(); m->nombre = nombre_alias; m->version = VERSION; m->entorno = std::make_shared<Entorno>(); return m; } }'
-            Set-Content -Encoding UTF8 -Path "build\src\regex_mod.cpp" -Value $cppCode
-          }
-
-          $cppList = Get-ChildItem "build\src\*.cpp" | ForEach-Object { $_.FullName }
-          Write-Host "Compilando $($cppList.Count) archivos C++..."
-          & g++ -std=c++17 -O1 -I"build\inc" $cppList -o "build\esp.exe" -lws2_32 -liphlpapi -lbcrypt -static
+          Write-Host "Compilando $($CPP_FILES.Count) archivos originales..."
+          & g++ -std=c++17 -O1 -fmax-errors=5 -I"$I_FLAG" $CPP_FILES -o "build\esp.exe" -lws2_32 -liphlpapi -lbcrypt -static
 
           if (-not (Test-Path "build\esp.exe")) {
-            throw "g++ termino sin generar build\esp.exe"
+            throw "Fallo la compilacion."
           }
 
           Copy-Item "build\esp.exe" "dist\ESP-2.0.0-win64\esp.exe" -Force
-
-          $batLines = @(
-            '@echo off',
-            'title Instalador ESP 2.0.0',
-            'if not exist "C:\Program Files\ESP" mkdir "C:\Program Files\ESP"',
-            'copy /Y "%~dp0esp.exe" "C:\Program Files\ESP\esp.exe" >nul',
-            'powershell -Command "[Environment]::SetEnvironmentVariable(''Path'', [Environment]::GetEnvironmentVariable(''Path'', ''User'') + '';C:\Program Files\ESP'', ''User'')"',
-            'echo [OK] ESP 2.0.0 instalado y agregado al PATH.',
-            'pause'
-          )
-          Set-Content -Encoding ASCII -Path "dist\ESP-2.0.0-win64\instalar.bat" -Value $batLines
-
           Compress-Archive -Path "dist\ESP-2.0.0-win64\*" -DestinationPath "dist\ESP-2.0.0-win64.zip" -Force
 
       - name: Publicar en Releases
