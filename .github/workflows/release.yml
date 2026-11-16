@@ -17,22 +17,35 @@ jobs:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Preparar archivos y compilar esp.exe
+      - name: Organizar, compilar y empaquetar ESP
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $src = Get-ChildItem -Directory -Recurse -Filter "src" | Select-Object -First 1
-          $inc = Get-ChildItem -Directory -Recurse -Filter "include" | Select-Object -First 1
 
-          if (-not $src -or -not $inc) {
-            Write-Host "Contenido actual del repositorio:"
-            Get-ChildItem -Recurse -Depth 2 | Select-Object FullName
-            throw "No se encontraron las carpetas 'src' o 'include'."
+          # Mostrar que archivos existen realmente en el repositorio
+          Write-Host "=== Archivos detectados en el repositorio ==="
+          Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\\.git\\' } | ForEach-Object { Write-Host $_.FullName }
+
+          # Buscar todos los .cpp y .hpp en cualquier parte del repositorio
+          $allCpp = Get-ChildItem -Recurse -Filter "*.cpp" | Where-Object { $_.Name -notmatch '^test_' }
+          $allHpp = Get-ChildItem -Recurse -Filter "*.hpp"
+
+          if ($allCpp.Count -eq 0) {
+            throw "No se encontro ningun archivo .cpp en tu repositorio de GitHub. Sube los archivos de tu carpeta 'src'."
           }
 
-          New-Item -ItemType Directory -Force -Path "$($inc.FullName)\esp", "build", "dist\ESP-2.0.0-win64" | Out-Null
+          New-Item -ItemType Directory -Force -Path "build\inc\esp", "build\src", "dist\ESP-2.0.0-win64" | Out-Null
 
-          if (-not (Test-Path "$($inc.FullName)\esp\regex_mod.hpp")) {
+          foreach ($h in $allHpp) {
+            Copy-Item $h.FullName "build\inc\$($h.Name)" -Force
+            Copy-Item $h.FullName "build\inc\esp\$($h.Name)" -Force
+          }
+          foreach ($c in $allCpp) {
+            Copy-Item $c.FullName "build\src\$($c.Name)" -Force
+          }
+
+          # Crear regex_mod si falta
+          if (-not (Test-Path "build\inc\esp\regex_mod.hpp")) {
             @'
 #pragma once
 #include "valor.hpp"
@@ -41,10 +54,11 @@ jobs:
 namespace esp {
 std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias = "re");
 }
-'@ | Set-Content -Encoding UTF8 "$($inc.FullName)\esp\regex_mod.hpp"
+'@ | Set-Content -Encoding UTF8 "build\inc\esp\regex_mod.hpp"
+            Copy-Item "build\inc\esp\regex_mod.hpp" "build\inc\regex_mod.hpp" -Force
           }
 
-          if (-not (Test-Path "$($src.FullName)\regex_mod.cpp")) {
+          if (-not (Test-Path "build\src\regex_mod.cpp")) {
             @'
 #include "esp/regex_mod.hpp"
 #include "esp/runtime.hpp"
@@ -57,12 +71,16 @@ std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias) {
     return m;
 }
 }
-'@ | Set-Content -Encoding UTF8 "$($src.FullName)\regex_mod.cpp"
+'@ | Set-Content -Encoding UTF8 "build\src\regex_mod.cpp"
           }
 
-          $cppFiles = Get-ChildItem "$($src.FullName)\*.cpp" | ForEach-Object { $_.FullName }
-          Write-Host "Compilando $($cppFiles.Count) archivos con g++ preinstalado..."
-          & g++ -std=c++17 -O2 -I"$($inc.FullName)" $cppFiles -o "build\esp.exe" -lws2_32 -liphlpapi -lbcrypt -static
+          $cppList = Get-ChildItem "build\src\*.cpp" | ForEach-Object { $_.FullName }
+          Write-Host "=== Compilando $($cppList.Count) archivos C++ ==="
+          & g++ -std=c++17 -O1 -I"build\inc" $cppList -o "build\esp.exe" -lws2_32 -liphlpapi -lbcrypt -static
+
+          if (-not (Test-Path "build\esp.exe")) {
+            throw "g++ termino sin generar build\esp.exe"
+          }
 
           Copy-Item "build\esp.exe" "dist\ESP-2.0.0-win64\esp.exe" -Force
           @'
