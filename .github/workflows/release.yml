@@ -12,103 +12,74 @@ permissions:
 jobs:
   build-windows:
     runs-on: windows-latest
+    timeout-minutes: 10
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
 
-      - name: Configurar MSYS2 UCRT64
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: >-
-            mingw-w64-ucrt-x86_64-gcc
-            mingw-w64-ucrt-x86_64-nsis
-
       - name: Preparar archivos y compilar esp.exe
-        shell: msys2 {0}
+        shell: pwsh
         run: |
-          set -e
-          echo "=== Estructura del repositorio ==="
-          find . -maxdepth 3 -not -path '*/.*'
+          $ErrorActionPreference = "Stop"
+          $src = Get-ChildItem -Directory -Recurse -Filter "src" | Select-Object -First 1
+          $inc = Get-ChildItem -Directory -Recurse -Filter "include" | Select-Object -First 1
 
-          # Detectar si src esta en la raiz o en una subcarpeta
-          SRC_DIR=$(find . -type d -name "src" | head -n 1)
-          INC_DIR=$(find . -type d -name "include" | head -n 1)
-
-          if [ -z "$SRC_DIR" ] || [ -z "$INC_DIR" ]; then
-            echo "ERROR: No se encontraron las carpetas 'src' o 'include' en el repositorio."
-            exit 1
-          fi
-
-          mkdir -p "$INC_DIR/esp" build
-
-          # Crear regex_mod si no fue subido
-          if [ ! -f "$INC_DIR/esp/regex_mod.hpp" ]; then
-            cat << 'EOF' > "$INC_DIR/esp/regex_mod.hpp"
-          #pragma once
-          #include "valor.hpp"
-          #include <memory>
-          #include <string>
-          namespace esp {
-          std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias = "re");
+          if (-not $src -or -not $inc) {
+            Write-Host "Contenido actual del repositorio:"
+            Get-ChildItem -Recurse -Depth 2 | Select-Object FullName
+            throw "No se encontraron las carpetas 'src' o 'include'."
           }
-          EOF
-          fi
 
-          if [ ! -f "$SRC_DIR/regex_mod.cpp" ]; then
-            cat << 'EOF' > "$SRC_DIR/regex_mod.cpp"
-          #include "esp/regex_mod.hpp"
-          #include "esp/runtime.hpp"
-          #include <map>
-          #include <mutex>
-          #include <regex>
-          namespace esp {
-          std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias) {
-              auto m = std::make_shared<Modulo>();
-              m->nombre = nombre_alias;
-              m->version = VERSION;
-              m->entorno = std::make_shared<Entorno>();
-              return m;
+          New-Item -ItemType Directory -Force -Path "$($inc.FullName)\esp", "build", "dist\ESP-2.0.0-win64" | Out-Null
+
+          if (-not (Test-Path "$($inc.FullName)\esp\regex_mod.hpp")) {
+            @'
+#pragma once
+#include "valor.hpp"
+#include <memory>
+#include <string>
+namespace esp {
+std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias = "re");
+}
+'@ | Set-Content -Encoding UTF8 "$($inc.FullName)\esp\regex_mod.hpp"
           }
+
+          if (-not (Test-Path "$($src.FullName)\regex_mod.cpp")) {
+            @'
+#include "esp/regex_mod.hpp"
+#include "esp/runtime.hpp"
+namespace esp {
+std::shared_ptr<Modulo> crear_modulo_re(const std::string& nombre_alias) {
+    auto m = std::make_shared<Modulo>();
+    m->nombre = nombre_alias;
+    m->version = VERSION;
+    m->entorno = std::make_shared<Entorno>();
+    return m;
+}
+}
+'@ | Set-Content -Encoding UTF8 "$($src.FullName)\regex_mod.cpp"
           }
-          EOF
-          fi
 
-          echo "=== Compilando archivos desde $SRC_DIR ==="
-          g++ -std=c++17 -O2 -I"$INC_DIR" "$SRC_DIR"/*.cpp -o build/esp.exe -lws2_32 -liphlpapi -lbcrypt -static
+          $cppFiles = Get-ChildItem "$($src.FullName)\*.cpp" | ForEach-Object { $_.FullName }
+          Write-Host "Compilando $($cppFiles.Count) archivos con g++ preinstalado..."
+          & g++ -std=c++17 -O2 -I"$($inc.FullName)" $cppFiles -o "build\esp.exe" -lws2_32 -liphlpapi -lbcrypt -static
 
-      - name: Crear instalador NSIS
-        shell: msys2 {0}
-        run: |
-          set -e
-          cat << 'EOF' > installer.nsi
-          Name "ESP 2.0.0"
-          OutFile "ESP-2.0.0-win64.exe"
-          InstallDir "$PROGRAMFILES64\ESP"
-          RequestExecutionLevel admin
+          Copy-Item "build\esp.exe" "dist\ESP-2.0.0-win64\esp.exe" -Force
+          @'
+@echo off
+title Instalador ESP 2.0.0
+if not exist "C:\Program Files\ESP" mkdir "C:\Program Files\ESP"
+copy /Y "%~dp0esp.exe" "C:\Program Files\ESP\esp.exe" >nul
+powershell -Command "[Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'User') + ';C:\Program Files\ESP', 'User')"
+echo [OK] ESP 2.0.0 instalado y agregado al PATH.
+pause
+'@ | Set-Content -Encoding ASCII "dist\ESP-2.0.0-win64\instalar.bat"
 
-          Page directory
-          Page instfiles
+          Compress-Archive -Path "dist\ESP-2.0.0-win64\*" -DestinationPath "dist\ESP-2.0.0-win64.zip" -Force
 
-          Section "Instalar ESP"
-            SetOutPath "$INSTDIR"
-            File "build\esp.exe"
-            WriteUninstaller "$INSTDIR\Uninstall.exe"
-            nsExec::ExecToLog 'powershell -Command "[Environment]::SetEnvironmentVariable(\"Path\", [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\") + \";$INSTDIR\", \"Machine\")"'
-          SectionEnd
-
-          Section "Uninstall"
-            Delete "$INSTDIR\esp.exe"
-            Delete "$INSTDIR\Uninstall.exe"
-            RMDir "$INSTDIR"
-          SectionEnd
-          EOF
-          makensis installer.nsi
-
-      - name: Subir instalador a Releases
+      - name: Publicar en Releases
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.0.0
-          name: "ESP 2.0.0 — Instalador Oficial para Windows"
-          files: ESP-2.0.0-win64.exe
+          name: "ESP 2.0.0 — Windows 64-bit"
+          files: dist/ESP-2.0.0-win64.zip
