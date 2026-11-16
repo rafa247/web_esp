@@ -1,0 +1,63 @@
+name: Compilar y Publicar ESP 2.0.0
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar MinGW
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-nsis make
+
+      - name: Compilar esp.exe
+        shell: msys2 {0}
+        run: |
+          mkdir -p build
+          g++ -std=c++17 -O2 -Iinclude src/*.cpp -o build/esp.exe -lws2_32 -liphlpapi -lbcrypt -static
+
+      - name: Crear instalador NSIS (con PATH automatico)
+        shell: msys2 {0}
+        run: |
+          cat << 'EOF' > installer.nsi
+          Name "ESP 2.0.0"
+          OutFile "ESP-2.0.0-win64.exe"
+          InstallDir "$PROGRAMFILES64\ESP"
+          RequestExecutionLevel admin
+
+          Page directory
+          Page instfiles
+
+          Section "Instalar ESP"
+            SetOutPath "$INSTDIR"
+            File "build\esp.exe"
+            WriteUninstaller "$INSTDIR\Uninstall.exe"
+            nsExec::ExecToLog 'powershell -Command "[Environment]::SetEnvironmentVariable(\"Path\", [Environment]::GetEnvironmentVariable(\"Path\", \"Machine\") + \";$INSTDIR\", \"Machine\")"'
+          SectionEnd
+
+          Section "Uninstall"
+            Delete "$INSTDIR\esp.exe"
+            Delete "$INSTDIR\Uninstall.exe"
+            RMDir "$INSTDIR"
+          SectionEnd
+          EOF
+          makensis installer.nsi
+
+      - name: Subir instalador a Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.0
+          name: "ESP 2.0.0 — Instalador Oficial para Windows"
+          files: ESP-2.0.0-win64.exe
