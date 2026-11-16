@@ -90,6 +90,35 @@
             text-decoration: none;
         }
         .btn-secundario:hover { border-color: var(--accent); }
+        .sha-box {
+            max-width: 680px;
+            margin: 1.35rem auto 0;
+            padding: 0.75rem 1rem;
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: Consolas, monospace;
+            font-size: 0.82rem;
+            color: var(--muted);
+            word-break: break-all;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+        }
+        .sha-box strong { color: var(--text); }
+        .btn-copiar {
+            background: var(--surface-2);
+            color: var(--accent-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-copiar:hover { border-color: var(--accent-2); }
         main {
             max-width: 1020px;
             margin: 0 auto;
@@ -165,12 +194,23 @@
         herramientas de ciberseguridad y kernels x86 con sintaxis 100% nativa en español.
     </p>
     <div class="cta-group">
-        <a href="descargas/ESP-2.0.0-win64.exe" class="btn-descarga" download>
-            ⬇ Descargar Instalador ESP v2.0.0 (Windows 64-bit)
+        <a href="https://github.com/rafa247/web_esp/releases/download/v2.0.0/ESP-2.0.0-win64.zip"
+           class="btn-descarga"
+           download="ESP-2.0.0-win64.zip">
+            ⬇ Descargar ESP v2.0.0 (Windows 64-bit)
         </a>
         <a href="#guia-defender" class="btn-secundario">
             🛡 ¿Windows Defender lo bloquea? Ver guía
         </a>
+    </div>
+    <div class="sha-box">
+        <strong>SHA-256:</strong>
+        <span id="sha256-esp">7e308f5a978232387e29fbaeddece10da6be4dd67833db842e44a10a4902ae3c</span>
+        <button type="button"
+                class="btn-copiar"
+                onclick="navigator.clipboard.writeText(document.getElementById('sha256-esp').innerText); this.innerText='¡Copiado!'; setTimeout(()=>this.innerText='Copiar', 1500);">
+            Copiar
+        </button>
     </div>
 </header>
 
@@ -179,20 +219,21 @@
         <h2>1. Instalación Rápida y Registro Automático en el PATH</h2>
         <div class="card">
             <p>
-                El instalador oficial <strong>ESP-2.0.0-win64.exe</strong> realiza toda la configuración por ti en menos de 10 segundos:
+                El paquete oficial <strong>ESP-2.0.0-win64.zip</strong> incluye el compilador nativo <code>esp.exe</code> listo para usarse en menos de 10 segundos:
             </p>
             <ol>
-                <li>Descarga el instalador haciendo clic en el botón superior <strong>Descargar Instalador ESP v2.0.0</strong>.</li>
-                <li>Ejecuta <code>ESP-2.0.0-win64.exe</code> y sigue el asistente (asegúrate de dejar marcada la opción <strong>"Agregar ESP al PATH del sistema"</strong>).</li>
-                <li>Adicionalmente, la primera vez que ejecutas <code>esp</code>, el propio binario verifica su ubicación física y se auto-registra en el <code>PATH</code> de tu usuario para que puedas ejecutar <code>esp archivo.esp</code> desde cualquier carpeta.</li>
+                <li>Descarga el archivo haciendo clic en el botón superior <strong>Descargar ESP v2.0.0 (Windows 64-bit)</strong>.</li>
+                <li>Extrae el contenido de <code>ESP-2.0.0-win64.zip</code> en una carpeta permanente (por ejemplo, <code>C:\ESP</code> o <code>C:\Program Files\ESP</code>).</li>
+                <li>La primera vez que ejecutas <code>esp.exe</code>, el propio binario verifica su ubicación física y se auto-registra en el <code>PATH</code> de tu usuario para que puedas ejecutar <code>esp archivo.esp</code> desde cualquier carpeta.</li>
             </ol>
-            <p>Abre una terminal nueva (PowerShell o CMD) y comprueba la instalación:</p>
+            <p>Abre una terminal nueva (PowerShell o CMD) y comprueba la instalación (y su hash SHA-256 si deseas verificar integridad):</p>
             <pre><code>esp version
-esp ruta</code></pre>
+esp ruta
+Get-FileHash "$HOME\Downloads\ESP-2.0.0-win64.zip" -Algorithm SHA256</code></pre>
         </div>
 
         <div class="alerta-defender" id="guia-defender">
-            <h3>🛡 ¿Qué hacer si Windows Defender o SmartScreen bloquea el instalador?</h3>
+            <h3>🛡 ¿Qué hacer si Windows Defender o SmartScreen bloquea el ejecutable?</h3>
             <p>
                 Como <strong>ESP 2.0.0</strong> es un proyecto independiente recién compilado y no cuenta con un certificado comercial de pago de Microsoft, <strong>Windows Defender SmartScreen</strong> puede mostrar una pantalla azul con el mensaje <em>"Windows protegió su PC"</em> o bloquear la descarga en el navegador.
             </p>
@@ -200,21 +241,21 @@ esp ruta</code></pre>
             <h3>Opción A: Permitir desde la ventana de Windows SmartScreen (Recomendado)</h3>
             <ol>
                 <li>Cuando aparezca la ventana azul <strong>"Windows protegió su PC"</strong>, haz clic en el enlace subrayado <strong><u>Más información</u></strong> (situado debajo del texto de advertencia).</li>
-                <li>Aparecerá el botón <strong>Ejecutar de todas formas</strong> en la parte inferior derecha. Haz clic en él para iniciar el instalador normalmente.</li>
+                <li>Aparecerá el botón <strong>Ejecutar de todas formas</strong> en la parte inferior derecha. Haz clic en él para iniciar <code>esp.exe</code> normalmente.</li>
             </ol>
 
             <h3>Opción B: Desbloquear el archivo desde Propiedades o PowerShell</h3>
             <ol>
-                <li>Haz clic derecho sobre <code>ESP-2.0.0-win64.exe</code> y selecciona <strong>Propiedades</strong>.</li>
+                <li>Haz clic derecho sobre <code>ESP-2.0.0-win64.zip</code> o <code>esp.exe</code> y selecciona <strong>Propiedades</strong>.</li>
                 <li>En la pestaña <strong>General</strong> (abajo a la derecha), marca la casilla <strong>Desbloquear</strong> y pulsa <strong>Aceptar</strong>.</li>
                 <li>O bien ejecuta este comando en PowerShell para quitar la marca de descarga de Internet:</li>
             </ol>
-            <pre><code>Unblock-File -Path "$HOME\Downloads\ESP-2.0.0-win64.exe"</code></pre>
+            <pre><code>Unblock-File -Path "$HOME\Downloads\ESP-2.0.0-win64.zip"</code></pre>
 
             <h3>Opción C: Si Antivirus de Windows Defender lo pone en cuarentena</h3>
             <ol>
                 <li>Abre <strong>Seguridad de Windows</strong> → <strong>Protección contra virus y amenazas</strong> → <strong>Historial de protección</strong>.</li>
-                <li>Selecciona el evento reciente de <code>ESP-2.0.0-win64.exe</code> o <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
+                <li>Selecciona el evento reciente de <code>ESP-2.0.0-win64.zip</code> o <code>esp.exe</code>, pulsa en <strong>Acciones</strong> → <strong>Restaurar</strong>.</li>
                 <li>Para evitar futuras alertas al compilar tus propios <code>.exe</code> con <code>esp compilar</code>, añade tu carpeta de instalación (<code>C:\Program Files\ESP</code>) en <strong>Administrar la configuración</strong> → <strong>Exclusiones</strong>.</li>
             </ol>
         </div>
